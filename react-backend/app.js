@@ -12,14 +12,14 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 /////////////////////////////////////////////////////
-
+/*
 const {MongoClient} = require('mongodb');
 
 async function main(){
   /**
    * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
    * See https://docs.mongodb.com/ecosystem/drivers/node/ for more details
-   */
+   
   const uri = "mongodb+srv://Rheshav:SBgxypqdhUv859Q@sesg3.8gnmg.azure.mongodb.net/<dbname>?retryWrites=true&w=majority";
 
 
@@ -58,7 +58,7 @@ async function listDatabases(client){
   .then(function(result) {
     // process result
   })
-  */
+  
   db.collection('Users').deleteMany({ 
     tags: "cotton"
   })
@@ -70,10 +70,12 @@ async function listDatabases(client){
 
   function iterateFunc(doc) {
     console.log(JSON.stringify(doc, null, 4));
+
   }
 
   function errorFunc(error) {
     console.log(error);
+
   }
 
   cursor.forEach(iterateFunc, errorFunc);
@@ -81,7 +83,7 @@ async function listDatabases(client){
 };
 
 
-
+*/
 
 ////////////////////////////////////////////////////////////
 
