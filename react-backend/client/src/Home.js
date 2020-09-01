@@ -40,13 +40,13 @@ class Home extends Component {
           
         </div>
         <div>
-            <h1>Users</h1>
-              {this.state.users.map(user =>
-                <div key={user._id}>{user.title}</div>
-              )}
-          </div>
-        <div>
           <a href="/get-data">Load Data</a>
+        </div>
+        <div>
+          <h1>Database Test</h1>
+            {this.state.users.map(user =>
+              <div key={user._id}>Username: {user.title} || Description: {user.content} || Developer: {user.author}</div>
+            )}
         </div>
         <div>
           <form action="/insert" method="post">

@@ -14,6 +14,8 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+/* Database Related Functions */
+
 router.get('/get-data', function(req, res, next){
   
   var resultArray = [];
@@ -58,6 +60,8 @@ router.post('/insert', function(req, res, next) {
   });
   res.redirect('/');
 });
+
+/* End Database Related Functions */
 
 module.exports = router;
 
