@@ -7,7 +7,7 @@ const MongoClient = require('mongodb').MongoClient;
 
 const client = new MongoClient(url);
 
-const dbName = 'Users';
+const dbName = 'eLibrary';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -26,7 +26,7 @@ router.get('/get-data', function(req, res, next){
     
     const db = client.db(dbName);
     
-    var cursor = db.collection('Users').find();
+    var cursor = db.collection('Resources').find();
     
     cursor.forEach(function(doc, err) {
       assert.equal(null, err);
@@ -42,8 +42,9 @@ router.get('/get-data', function(req, res, next){
 router.post('/insert', function(req, res, next) {
   var item = {
     title: req.body.title,
-    content: req.body.content,
-    author: req.body.author
+    content: req.body.description,
+    author: req.body.author,
+    refnumber: req.body.refnumber
   }
 
   MongoClient.connect(url, function(err, client){
@@ -51,8 +52,7 @@ router.post('/insert', function(req, res, next) {
 
     const db = client.db(dbName);
 
-    db.collection('Users').insertOne(item, function(err, result){
-      
+    db.collection('Resources').insertOne(item, function(err, result){
       assert.equal(null, err);
       console.log('Item inserted');
       client.close();

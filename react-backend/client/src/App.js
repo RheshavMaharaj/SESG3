@@ -28,7 +28,7 @@ export default function App() {
       <div>
         <div className="Toolbar">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1>UTS eLibrary Suite</h1>
+          eLibrary Suite
           <nav>
             <Link to="/"><img src={home} className="App-logo" alt="home" /></Link>
             <Link to="/about"><img src={about} className="App-logo" alt="about" /></Link>
