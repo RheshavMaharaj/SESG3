@@ -3,6 +3,7 @@ import React from "react";
 export default function About(){
   return(
     <div>
+      {/* Highlight List View imported from bootstrap example code. May be removed */}
       <h1>This is the About screen</h1>
       <div class="row">
         <div class="col-4">
