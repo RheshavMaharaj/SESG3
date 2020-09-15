@@ -29,7 +29,7 @@ class Navbar extends Component {
   
   render(){
     return (
-      <Greeting LoggedIn={false} />
+      <Greeting LoggedIn={false/* SignUp.whateverstate */} />
     );
   }
 }
