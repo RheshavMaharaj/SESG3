@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class User extends Component{
+export default class Login extends Component{
   
   render(){
     return(

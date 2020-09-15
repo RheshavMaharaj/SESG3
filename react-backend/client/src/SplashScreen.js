@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class User extends Component{
+export default class SplashScreen extends Component{
   
   render(){
     return(
