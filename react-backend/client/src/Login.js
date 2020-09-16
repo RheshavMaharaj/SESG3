@@ -4,7 +4,7 @@ export default class Login extends Component{
   
   render(){
     return(
-      <h1>This is the User screen</h1>
+      <h1>This is the Login screen</h1>
     )
   }
 }

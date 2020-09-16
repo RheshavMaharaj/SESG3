@@ -4,7 +4,7 @@ export default class SplashScreen extends Component{
   
   render(){
     return(
-      <h1>This is the User screen</h1>
+      <h1>This is the SplashScreen </h1>
     )
   }
 }
