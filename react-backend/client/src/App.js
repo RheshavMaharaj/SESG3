@@ -1,79 +1,11 @@
 import React from "react";
-<<<<<<< HEAD
-
-
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-
-import logo from './logo.svg';
-import './App.css';
-
-import about from './Assets/help.svg';
-import home from './Assets/home-run.svg';
-import user from './Assets/user.svg';
-import notification from './Assets/notification.svg';
-
-
-import Home from './Home.js';
-import About from './About.js';
-import User from './User.js';
-
-
-=======
 import Navbar from './Navbar.js';
->>>>>>> dbfe16069ea0fdb7b30d940be2ba77f3b078d77f
 
 
 export default function App() {
   return (
     
-<<<<<<< HEAD
-    <Router>
-      <div>
-        <div className="Toolbar">
-          <img src={logo} className="App-logo" alt="logo" />
-         <h1>eLibrary Suite</h1> 
-           <nav>
-
-             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                 Notification
-                 <span class="badge badge-light">3</span> 
-              </button>
-               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-           
-            <Link to="/"><img src={home} className="App-logo" alt="home" /></Link>
-            <Link to="/about"><img src={about} className="App-logo" alt="about" /></Link>
-            <Link to="/users"><img src={user} className="App-logo" alt="user" /></Link>
-          </nav>
-        </div>
-       <div>
-       </div>
-        <div>
-          <Switch>
-            <Route path="/about">
-              <About />
-            </Route>
-            <Route path="/users">
-              <User />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
-        </div>
-      </div>
-    </Router>      
-=======
     <Navbar />
     
->>>>>>> dbfe16069ea0fdb7b30d940be2ba77f3b078d77f
   );
 }
