@@ -1,3 +1,4 @@
+//Imports
 import React, {Component} from "react";
 import formula1 from './Assets/f1.png';
 import formula2 from './Assets/f2.png';
@@ -5,9 +6,11 @@ import sunset from './Assets/sunset.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Home.css';
 
+//Class and subsequent functions
 class Home extends Component {
   state = {books: []}
 
+  /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
     fetch('/get-data')
       .then(res => res.json())
@@ -17,6 +20,7 @@ class Home extends Component {
   render() {
     return (
       <div>
+        {/* Highlight Carousel imported from bootstrap example code. May be removed */}
         <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
           <div className="carousel-inner">
             <div className="carousel-item active">
@@ -38,39 +42,25 @@ class Home extends Component {
             <span className="sr-only">Next</span>
           </a>
         </div>
-        {/*}
+        {
+        /*
+        //Get data link to force app to show new updates to the database on screen - use for light testing purposes only
         <div>
           <a href="/get-data">Load Data</a>
         </div>
-        */}
+        */
+        }
         <div className="list-group">
+          {/* Loop to display the resource data into a bootstrap wrapped element. */}
           <h3>Your Resources</h3>
             {this.state.books.map(book =>
               <div key={book._id}>
-                <button type="button" className="list-group-item list-group-item-action"> Title: {book.title} </button>
-                {/*|| Description: {user.content} || Developer: {user.author}*/}
+                <button type="button" className="list-group-item list-group-item-action"> {book.title} </button>
+                {/* || Description: {user.content} || Developer: {user.author} */}
               </div>
             )}
         </div>
-        {/*}
-        <div>
-          <form action="/insert" method="post" className="insert-form">
-            <div className="form-labels">
-              <label>Title</label> <br/>
-              <label>Description</label> <br/>
-              <label>Author</label> <br/>
-              <label>Reference Number</label> <br/>
-            </div>
-            <div className="form-input">
-              <input type="text" id="title" name="title"/> <br/>
-              <input type="text" id="description" name="description"/> <br/>
-              <input type="text" id="author" name="author"/> <br/>
-              <input type="number" id="refnumber" name="refnumber"/> <br/>
-            </div>
-            <button type="submit">INSERT</button>
-          </form>
-        </div>
-        */}
+        {/* Form to insert documents into the mongodb database collection */}
         <div>
           <form action="/insert" method="post" className = "insert-form">
             <h3>Add Resource to Catalogue</h3>

@@ -1,4 +1,5 @@
 import React from "react";
+<<<<<<< HEAD
 
 
 import {
@@ -22,11 +23,15 @@ import About from './About.js';
 import User from './User.js';
 
 
+=======
+import Navbar from './Navbar.js';
+>>>>>>> dbfe16069ea0fdb7b30d940be2ba77f3b078d77f
 
 
 export default function App() {
   return (
     
+<<<<<<< HEAD
     <Router>
       <div>
         <div className="Toolbar">
@@ -66,5 +71,9 @@ export default function App() {
         </div>
       </div>
     </Router>      
+=======
+    <Navbar />
+    
+>>>>>>> dbfe16069ea0fdb7b30d940be2ba77f3b078d77f
   );
 }
