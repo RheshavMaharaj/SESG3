@@ -5,10 +5,11 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { selectStatus } from './redux/features/loginSlice.js';
 
 import logo from './logo.svg';
 import './App.css';
-
 import about from './Assets/help.svg';
 import home from './Assets/home-run.svg';
 import user from './Assets/user.svg';
@@ -16,26 +17,22 @@ import user from './Assets/user.svg';
 import Home from './Home.js';
 import About from './About.js';
 import User from './User.js';
-
 import Login from './Login.js';
 import SplashScreen from './SplashScreen';
 import SignUp from './SignUp.js';
 
-
-
 class Navbar extends Component {
-  
-  
-  
   render(){
     return (
-      <Greeting LoggedIn={false/* SignUp.whateverstate */} />
+      <Greeting />
     );
   }
 }
 
 function Greeting(props){
-  const LoggedIn = props.LoggedIn;
+  
+  const LoggedIn = useSelector(selectStatus);
+
   if (LoggedIn) {    
     return <IsLoggedIn />;  
   }  
