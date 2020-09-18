@@ -8,13 +8,16 @@ import './Home.css';
 
 //Class and subsequent functions
 class Home extends Component {
-  state = {books: []}
+  state = {books: [], test: ''}
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
     fetch('/get-data')
       .then(res => res.json())
       .then(books => this.setState({ books }));
+    fetch('/test')
+      .then(res => res.json())
+      .then(test => this.setState({ test }));
   }
 
   render() {
@@ -82,6 +85,7 @@ class Home extends Component {
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
+          {this.state.test}
         </div>
       </div>
     );

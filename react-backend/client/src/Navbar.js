@@ -29,6 +29,8 @@ class Navbar extends Component {
   }
 }
 
+//get session details and based on session details, render logged in or logged out
+
 function Greeting(props){
   
   const LoggedIn = useSelector(selectStatus);
@@ -78,7 +80,7 @@ function IsLoggedIn(props){
           <img src={logo} className="App-logo" alt="logo" />
           eLibrary Suite
           <nav>
-            <Link to="/"><img src={home} className="App-logo" alt="home" /></Link>
+            <Link to="/home"><img src={home} className="App-logo" alt="home" /></Link>
             <Link to="/about"><img src={about} className="App-logo" alt="about" /></Link>
             <Link to="/users"><img src={user} className="App-logo" alt="user" /></Link>
           </nav>
@@ -91,7 +93,7 @@ function IsLoggedIn(props){
             <Route path="/users">
               <User />
             </Route>
-            <Route path="/">
+            <Route path="/home">
               <Home />
             </Route>
           </Switch>
