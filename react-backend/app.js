@@ -8,7 +8,6 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/resources');
 var usersRouter = require('./routes/users');
-var sessionRouter = require('./routes/session');
 
 var session = require('express-session');
 var bodyParser = require('body-parser');
@@ -16,7 +15,6 @@ var bodyParser = require('body-parser');
 var app = express();
 
 //Express Session
-
 app.use(cookieParser());
 app.use(session({secret: "Shh, its a secret!", saveUninitialized: false, resave: false}));
 
@@ -32,13 +30,12 @@ app.use(function (req, res, next) {
 app.get('/test', function(req, res){
   if(req.session.page_views){
     req.session.page_views++;
-    res.json("You visited this page " + req.session.page_views + " times");
+    res.json("You visited this page " + req.session.page_views + " times ");
   } else {
     req.session.page_views = 1;
-    res.json("Welcome to this page for the first time!");
+    res.json("Welcome to this page for the first time! ");
   }
 });
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -52,7 +49,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/', usersRouter);
-app.use('/', sessionRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

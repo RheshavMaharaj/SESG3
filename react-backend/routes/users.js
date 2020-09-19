@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var assert = require('assert');
 var url = "mongmongodb+srv://Rheshav:SBgxypqdhUv859Q@sesg3.8gnmg.azure.mongodb.net/<dbname>?retryWrites=true&w=majority"; //Connection String
+var session = require('express-session');
 
 const MongoClient = require('mongodb').MongoClient;
 
@@ -67,7 +68,25 @@ router.post('/insert-user', function(req, res, next) {
     });
 
   });
+  req.session.user = item;
   res.redirect('/home');
+});
+
+
+
+router.get('/login-status', function(req, res) {
+  var status = false;
+  if(req.session.user){
+    status = true;
+  }
+  console.log(status);
+  res.json(status);
+  
+});
+
+router.get('/get-session-user', function(req,res,next) {
+  var userID = req.session.user.first_name;
+  res.json(userID);
 });
 
 /* End Database Related Functions */
