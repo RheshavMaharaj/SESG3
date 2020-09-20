@@ -1,22 +1,24 @@
 import React, {Component} from "react";
 
-export default function About(){
+import help from "./Assets/help.svg"
+
+export default class About extends Component{
+ render (){
+
+
   return(
 <div>
      
       <h1 class="text-center">This is the user's about/help screen</h1>
-
-
    <div class="container" align="center">
 
-   
       <h5> FAQs</h5>
 
-
-      <div id="accordion">
-  <div class="card">
-    <div class="card-header" id="headingOne">
+       <div id="accordion">
+      <div class="card">
+       <div class="card-header" id="headingOne">
       <h5 class="mb-0">
+    
         <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
           Query 1
         </button>
@@ -119,9 +121,35 @@ export default function About(){
 
 
 
+
+
+
+
+
   
 
       </div>
+
+   
+<div>
+<div class="container">
+        <h1>About</h1>
+        <h4>What is this website?</h4>
+        <h4>Contact Information</h4>
+        <b>Email: </b> sesg3@uts.com (change this to whatever)
+        <div><b>Phone: </b> 04198237198212315 </div>
+        <b>Additional Contacts: </b>
+        <h4>Who Made it?</h4>
+        <t3>Team Tree (or SESG3) comprises of 7 members, and built this thing as a project for uni etc etc etc</t3>
+        <div><img src={help} width="200" height="200"  /></div>
+
+</div>
+  
+</div>
+
+
+
+      
 
      
 
@@ -130,4 +158,5 @@ export default function About(){
     
     
   )
+ }
 }
