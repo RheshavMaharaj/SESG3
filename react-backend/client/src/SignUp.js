@@ -1,8 +1,4 @@
-import React, { useState, Component } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import { Login, Logout, selectStatus } from './redux/features/loginSlice.js';
-
-
+import React, { Component } from "react";
 
 export default class SignUp extends Component{
   
@@ -13,13 +9,7 @@ export default class SignUp extends Component{
   }
 }
 
-
-
 function Greeting(props){
-
-  const status = useSelector(selectStatus);
-  const dispatch = useDispatch();
-
   return(
     <div>
       <form action="/insert-user" method="post" className = "insert-form">
@@ -48,8 +38,7 @@ function Greeting(props){
           <label>User Type</label>
           <input type="text" class="form-control" id="user_type" name="user_type" placeholder="Are you a Staff Member or a Student?"/>
         </div>
-        <button type="submit" class="btn btn-primary" /*onClick={() => dispatch(Login())}*/ >Submit</button>
-        {status}
+        <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
   )

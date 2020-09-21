@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import logo from './logo.svg';
 
 export default class About extends Component {
   render(){
@@ -12,7 +13,7 @@ export default class About extends Component {
         <b>Additional Contacts: </b>
         <h4>Who Made it?</h4>
         <t3>Team Tree (or SESG3) comprises of 7 members, and built this thing as a project for uni etc etc etc</t3>
-        <div><img src={logo} width="200" height="200"  /></div>
+        <div><img src={logo} width="200" height="200" alt="Team Logo" /></div>
       </div>
     )
   }

@@ -72,7 +72,32 @@ router.post('/insert-user', function(req, res, next) {
   res.redirect('/home');
 });
 
+router.post('/handle-login', function(req,res,next) {
+  var user;
 
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+    const db = client.db(dbName);
+    db.collection("User").findOne({
+      email: req.body.email
+    }, 
+    function(err, result) {
+      if (err) throw err;
+      user = result;
+      if(!req.body.email || !req.body.password){
+        res.redirect('/login');
+      } 
+      else {
+        if(user.email == req.body.email && user.password == req.body.password){
+          req.session.user = user;
+          console.log(user.first_name + " " + user.email);
+          res.redirect('/home');
+        }
+      }
+      client.close();
+    });
+  });
+});
 
 router.get('/login-status', function(req, res) {
   var status = false;

@@ -4,7 +4,10 @@ export default class Login extends Component{
   
   render(){
     return(
-      <Greeting />
+      <div>
+        <Greeting />
+      </div>
+      
     )
   }
 }
@@ -12,7 +15,7 @@ export default class Login extends Component{
 function Greeting(props){
   return(
     <div>
-      <form action="/login" method="post" className = "insert-form">
+      <form action="/handle-login" method="post" className = "insert-form">
         <h3>Sign In With Your Details</h3>
         <div class="form-group">
           <label>Email</label>
@@ -22,8 +25,9 @@ function Greeting(props){
           <label>Password</label>
           <input type="text" class="form-control" id="password" name="password" placeholder="Password"/>
         </div>
-        <button type="submit" class="btn btn-primary" /*onClick={() => dispatch(Login())}*/ >Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
       </form>
+      
     </div>
   )
 }
