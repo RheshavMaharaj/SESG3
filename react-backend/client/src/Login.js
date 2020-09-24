@@ -47,39 +47,48 @@ function Greeting(props) {
     //   </form>
 
     <div class="col-md-6 offset-md-3 p-2">
-
-          <h2>Sign In With Your Details</h2>
+      <h2>Sign In</h2>
 
       <Container>
-        <Row  md={{span:6, offset: 6}}>
-          <Col >
-      <Card bg={"light"} style={{ width: "18rem-" }} >
-        <Card.Body>
-        <Form>
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" id="email" placeholder="Enter Email"/>
-            <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
-            </Form.Text>
-          </Form.Group>
+        <Row md={{ span: 6, offset: 6 }}>
+          <Col>
+            <Card bg={"light"} style={{ width: "18rem-" }}>
+              <Card.Body>
+                <Form>
+                  <Form.Group controlId="loginFormEmail">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="Enter Email"
+                    />
+                    <Form.Text className="text-muted">
+                      We'll never share your email with anyone else.
+                    </Form.Text>
+                  </Form.Group>
 
-          <Form.Group controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Password" />
-          </Form.Group>
-          <Form.Group controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Sample Checkbox" />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Form>
-        </Card.Body>
-      </Card>
-      </Col>
-      </Row>
+                  <Form.Group controlId="loginFormPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      id="password"
+                      name="password"
+                      placeholder="Password"
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="loginFormCheckbox">
+                    <Form.Check type="checkbox" label="Check Me ;)" />
+                  </Form.Group>
+                  <Button variant="primary" type="submit">
+                    Submit
+                  </Button>
+                </Form>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
       </Container>
-      </div>
+    </div>
   );
 }
