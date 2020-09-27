@@ -39,6 +39,30 @@ router.get('/get-data', function(req, res, next){
     });
 
   });
+
+});
+
+router.post('/search-results', function(req,res,next) {
+  
+  var result = [];
+  
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+
+    const db = client.db(dbName);
+
+    var cursor = db.collection("Resources").find({ title: req.body.title });
+
+    cursor.forEach(function(doc, err) {
+      assert.equal(null, err);
+      result.push(doc); //storing to local array
+    }, function(){
+      client.close(); //closing database
+      res.json(result);
+    });
+
+  });
+
 });
 
 //Database insert function via router. Allows data updates on page loads

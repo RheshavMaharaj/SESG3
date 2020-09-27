@@ -45,6 +45,11 @@ class Home extends Component {
             <span className="sr-only">Next</span>
           </a>
         </div>
+        <div className = "searchbar">
+          <div class="md-form mt-0">
+            <input class="form-control" type="text" placeholder="Search" aria-label="Search" />
+          </div>
+        </div>
         {
         /*
         //Get data link to force app to show new updates to the database on screen - use for light testing purposes only
