@@ -42,28 +42,45 @@ router.get('/get-data', function(req, res, next){
 
 });
 
-router.post('/search-results', function(req,res,next) {
-  
-  var result = [];
-  
-  MongoClient.connect(url, function(err, client) {
-    if (err) throw err;
+var searchResults = []; //Used to store all the data into a local array to then be mapped in Home.js
 
+router.get('/search-results', function(req,res,next){
+  
+  var error = [{"_id": "01", 
+                "title":" Your Search Results returned Nothing"
+              }];
+  if(searchResults != 0){
+    res.json(searchResults);
+  }
+  else res.json(error);
+
+});
+
+router.post('/search', function(req,res,next) {
+  
+  MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
+    
+    assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
+    
     const db = client.db(dbName);
-
-    var cursor = db.collection("Resources").find({ title: req.body.title });
-
+    
+    var cursor = db.collection('Resources').find({ title: req.body.search });
+    
+    //Looping through the documents in the database to store into local array
     cursor.forEach(function(doc, err) {
       assert.equal(null, err);
-      result.push(doc); //storing to local array
+      searchResults.push(doc); //storing to local array
     }, function(){
       client.close(); //closing database
-      res.json(result);
+      //res.json(resultArray);
+      res.redirect('/home');
     });
 
   });
 
 });
+
+
 
 //Database insert function via router. Allows data updates on page loads
 router.post('/insert', function(req, res, next) {
@@ -87,7 +104,38 @@ router.post('/insert', function(req, res, next) {
     });
 
   });
-  res.redirect('/');
+  res.redirect('/home');
+});
+
+router.post('/remove', function(req, res, next) {
+  
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+    const db = client.db(dbName);
+    var myquery = { title: req.body.title };
+    db.collection('Resources').deleteOne(myquery, function(err, obj) {
+      if (err) throw err;
+      console.log("1 document deleted");
+      client.close();
+    });
+  }); 
+  res.redirect('/home');
+  
+});
+
+router.post('/edit', function(req, res, next) {
+  
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+    const db = client.db(dbName);
+    var myquery = { title: req.body.title };
+    db.collection('Resources').deleteOne(myquery, function(err, obj) {
+      if (err) throw err;
+      console.log("1 document deleted");
+      client.close();
+    });
+  }); 
+  res.redirect('/home');
 });
 
 /* End Database Related Functions */

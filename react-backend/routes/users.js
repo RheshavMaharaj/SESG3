@@ -93,18 +93,26 @@ router.post('/handle-login', function(req,res,next) {
           console.log(user.first_name + " " + user.email);
           res.redirect('/home');
         }
+        else res.redirect('/login');
       }
       client.close();
     });
+
   });
+
 });
 
 router.get('/login-status', function(req, res) {
   var status = false;
+  
   if(req.session.user){
     status = true;
   }
-  console.log(status);
+  if(status){
+    console.log("User is Logged in");
+  }
+  else console.log("User is Logged out");
+  
   res.json(status);
   
 });

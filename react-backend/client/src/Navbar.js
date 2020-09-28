@@ -18,6 +18,7 @@ import User from './User.js';
 import Login from './Login.js';
 import SplashScreen from './SplashScreen';
 import SignUp from './SignUp.js';
+import SearchResults from './SearchResults.js';
 
 class Navbar extends Component {
 
@@ -59,6 +60,9 @@ class Navbar extends Component {
               </Route>
               <Route path="/user">
                 <User />
+              </Route>
+              <Route path="/search-error">
+                <SearchResults />
               </Route>
               <Route path="/">
                 <SplashScreen />
