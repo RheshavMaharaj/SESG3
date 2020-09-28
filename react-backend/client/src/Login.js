@@ -54,7 +54,7 @@ function Greeting(props) {
           <Col>
             <Card bg={"light"} style={{ width: "18rem-" }}>
               <Card.Body>
-                <Form>
+                <Form action="/handle-login" method="post">
                   <Form.Group controlId="loginFormEmail">
                     <Form.Label>Email</Form.Label>
                     <Form.Control
