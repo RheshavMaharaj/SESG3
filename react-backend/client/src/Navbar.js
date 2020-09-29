@@ -96,13 +96,13 @@ function IsLoggedIn(props) {
         <span class="badge badge-light">3</span>
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" href="https://github.com/">
           Action
         </a>
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" href="https://github.com/">
           Another action
         </a>
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" href="https://github.com/">
           Something else here
         </a>
       </div>

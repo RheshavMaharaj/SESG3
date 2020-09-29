@@ -32,11 +32,16 @@
 
 .admin-control{
   display: flex;
-  justify-content: space-around;
-  margin-left: 40%;
-  margin-right: 40%;
-  margin-bottom: 50px;
+  justify-content: center;
+  margin-left: 10%;
+  margin-right: 10%;
 }
+
+.button-container {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 /*
 .footer {
   background-color: rgb(49, 49, 49);

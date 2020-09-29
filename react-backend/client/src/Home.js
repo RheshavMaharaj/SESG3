@@ -245,14 +245,11 @@ function BorrowBook() {
 function AddBook() {
   return (
     <div>
-      <button
-        type="button"
-        class="btn btn-primary"
-        data-toggle="modal"
-        data-target="#exampleModalCenter"
-      >
-        Add a Resource
-      </button>
+      <div className="button-container">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+          Add a Resource
+        </button>
+      </div>
       <div
         class="modal fade"
         id="exampleModalCenter"
@@ -344,14 +341,16 @@ function AddBook() {
 function RemoveBook() {
   return (
     <div>
-      <button
-        type="button"
-        class="btn btn-primary"
-        data-toggle="modal"
-        data-target="#exampleModalCenterRemove"
-      >
-        Remove a Resource
-      </button>
+      <div className="button-container">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#exampleModalCenterRemove"
+        >
+          Remove a Resource
+        </button>
+      </div>
       <div
         class="modal fade"
         id="exampleModalCenterRemove"
@@ -413,34 +412,19 @@ function RemoveBook() {
 function EditBook() {
   return (
     <div>
-      <button
-        type="button"
-        class="btn btn-primary"
-        data-toggle="modal"
-        data-target="#exampleModalCenterEdit"
-      >
-        Edit a Resource
-      </button>
-      <div
-        class="modal fade"
-        id="exampleModalCenterEdit"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
+      <div className="button-container">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterEdit">
+          Edit a Resource
+        </button>
+      </div>
+      <div class="modal fade" id="exampleModalCenterEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Edit a Resource
               </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button type="button" class="close" data-dismiss="modal"aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -448,14 +432,24 @@ function EditBook() {
               <div>
                 <form action="/edit" method="post" className="insert-form">
                   <div class="form-group">
-                    <label for="Title">Resource Title</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="title"
-                      name="title"
-                      placeholder="Enter title"
-                    />
+                    <label for="Search">Search</label>
+                    <input type="text" class="form-control" id="search" name="search" placeholder="Search for the book" />
+                  </div>
+                  <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter new title" />
+                  </div>
+                  <div class="form-group">
+                    <label>Book Description</label>
+                    <input type="text" class="form-control" id="content" name="content" placeholder="Enter new description" />
+                  </div>
+                  <div class="form-group">
+                    <label>Search</label>
+                    <input type="text" class="form-control" id="author" name="author" placeholder="Enter new Author" />
+                  </div>
+                  <div class="form-group">
+                    <label>Reference Number</label>
+                    <input type="text" class="form-control" id="refnumber" name="refnumber" placeholder="Enter a new reference number" />
                   </div>
                   <button type="submit" class="btn btn-primary">
                     Submit
@@ -464,11 +458,7 @@ function EditBook() {
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
               </button>
             </div>

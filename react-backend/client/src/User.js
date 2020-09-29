@@ -16,10 +16,9 @@ export default class User extends Component {
             <div class="col-8 ">
               <img
                 src={image1}
-                alt="User photo"
+                alt="User profile"
                 class="mr-5 mt-4 rounded-circle"
               ></img>
-
               <form>
                 <fieldset disabled>
                   <div class="form-row">
