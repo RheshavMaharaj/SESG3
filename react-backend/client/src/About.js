@@ -1,5 +1,6 @@
-import React from "react";
+import React, {Component} from "react";
 import logo from './Assets/tree.png';
+import help from './Assets/help.svg';
 
 
 export default class About extends Component {
