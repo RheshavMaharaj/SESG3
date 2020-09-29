@@ -124,14 +124,14 @@ router.post('/remove', function(req, res, next) {
 });
 
 router.post('/edit', function(req, res, next) {
-  
   MongoClient.connect(url, function(err, client) {
     if (err) throw err;
     const db = client.db(dbName);
-    var myquery = { title: req.body.title };
-    db.collection('Resources').deleteOne(myquery, function(err, obj) {
+    var myquery = { title: req.body.search };
+    var newvalues = { $set: {title: req.body.title, content: req.body.content , author: req.body.author, refnumber: req.body.refnumber} };
+    db.collection('Resources').updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
-      console.log("1 document deleted");
+      console.log("1 document updated");
       client.close();
     });
   }); 
