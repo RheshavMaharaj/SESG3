@@ -6,87 +6,36 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/resources');
 var usersRouter = require('./routes/users');
+
+var session = require('express-session');
+var bodyParser = require('body-parser');
 
 var app = express();
 
-/////////////////////////////////////////////////////
-/*
-const {MongoClient} = require('mongodb');
+//Express Session
+app.use(cookieParser());
+app.use(session({secret: "Shh, its a secret!", saveUninitialized: false, resave: false}));
 
-async function main(){
-  /**
-   * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
-   * See https://docs.mongodb.com/ecosystem/drivers/node/ for more details
-   
-  const uri = "mongodb+srv://Rheshav:SBgxypqdhUv859Q@sesg3.8gnmg.azure.mongodb.net/<dbname>?retryWrites=true&w=majority";
+app.use(function (req, res, next) {
+  var timestamp = Date.now();
+  var sessionID = req.sessionID; // Only available if you've enabled the express-session package.
+  //var requestID = uuid.v4();
+  //req.id = requestID; // In case other parts of the code require this ID.
+  console.log('timestamp: ' + timestamp, 'sessionID: ' + sessionID);
+  next();
+});
 
-
-  const client = new MongoClient(uri);
-
-  try {
-      // Connect to the MongoDB cluster
-      await client.connect();
-
-      // Make the appropriate DB calls
-      await  listDatabases(client);
-
-  } catch (e) {
-      console.error(e);
-  } finally {
-      await client.close();
+app.get('/test', function(req, res){
+  if(req.session.page_views){
+    req.session.page_views++;
+    res.json("You visited this page " + req.session.page_views + " times ");
+  } else {
+    req.session.page_views = 1;
+    res.json("Welcome to this page for the first time! ");
   }
-}
-
-main().catch(console.error);
-
-async function listDatabases(client){
-  databasesList = await client.db().admin().listDatabases();
-
-  console.log("Databases:");
-  databasesList.databases.forEach(db => console.log(` - ${db.name}`));
-
-  const db = client.db("eLibrary");
-  /*
-  var cursor = db.collection('Users').insertOne({
-    item: "canvas",
-    qty: 100,
-    tags: ["cotton"],
-    size: { h: 28, w: 35.5, uom: "cm" }
-  })
-  .then(function(result) {
-    // process result
-  })
-  
-  db.collection('Users').deleteMany({ 
-    tags: "cotton"
-  })
-  .then(function(result) {
-    // process result
-  })
-
-  var cursor = db.collection('Users').find({});
-
-  function iterateFunc(doc) {
-    console.log(JSON.stringify(doc, null, 4));
-
-  }
-
-  function errorFunc(error) {
-    console.log(error);
-
-  }
-
-  cursor.forEach(iterateFunc, errorFunc);
-
-};
-
-
-*/
-
-////////////////////////////////////////////////////////////
-
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -99,7 +48,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
