@@ -23,7 +23,7 @@ class Home extends Component {
       .then(results => this.setState({ results }));
     
   }
-
+  
   render() {
     return (
       <div className="home">
@@ -61,10 +61,13 @@ class Home extends Component {
           <h3>Search Results</h3>
           {this.state.results.map(result =>
             <div key={result._id}>
-              <button type="button" className="list-group-item list-group-item-action"> {result.title} </button>
+              <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenterBorrow"> 
+                {result.title} 
+              </button>
             </div>
           )}
         </div>
+        <BorrowBook />
         <div className="admin-control">
           <AddBook />
           <RemoveBook />
@@ -74,13 +77,87 @@ class Home extends Component {
           <h3>Your Resources</h3>
           {this.state.books.map(book =>
             <div key={book._id}>
-              <button type="button" className="list-group-item list-group-item-action"> {book.title} </button>
+              <BookDetails 
+                BookTitle = {book.title} 
+                BookContent = {book.content} 
+                BookAuthor = {book.author} 
+                BookID = {book._id}
+              />
             </div>
           )}
-        </div>      
+        </div>
       </div>
     );
   }
+}
+
+function BookDetails(props) {
+
+  var BookContent = props.BookContent;
+  var BookAuthor = props.BookAuthor;
+
+  var BookID = props.BookID;
+  var BookTitle = props.BookTitle;
+  
+  var ModalTarget = "#exampleModalCenter" + BookID;
+  var ModalTargetID = "exampleModalCenter" + BookID;
+
+  return (
+    <div>
+      <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target={ModalTarget}> 
+        {BookTitle}
+      </button>
+      <div class="modal fade" id={ModalTargetID} tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">
+                Book Details
+              </h5>
+              <button type="button" class="close" data-dismiss="modal"aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <label>Title: {BookTitle}</label>
+                <label>Description: {BookContent}</label>
+                <label>Author: {BookAuthor}</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function BorrowBook() {
+  return (
+    <div>
+      <div class="modal fade" id="exampleModalCenterBorrow" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">
+                Would you like to borrow this book?
+              </h5>
+              <button type="button" class="close" data-dismiss="modal"aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function AddBook(){
@@ -125,7 +202,6 @@ function AddBook(){
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Submit</button>
             </div>
           </div>
         </div>
@@ -197,20 +273,6 @@ function EditBook(){
                     <label for="Title">Resource Title</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="Enter title"/>
                   </div>
-                  {/*
-                  <div class="form-group">
-                    <label for="Description">Description</label>
-                    <input type="text" class="form-control" id="description" name="description" placeholder="Enter Resource Description"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="Author">Author</label>
-                    <input type="text" class="form-control" id="author" name="author" placeholder="Enter Resource Author(s)"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="Reference Number">Reference Number</label>
-                    <input type="number" class="form-control" id="refnumber" name="refnumber" placeholder="Enter Resource Reference Number"/>
-                  </div>
-                  */}
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
               </div>
@@ -230,12 +292,12 @@ export default Home;
 
 
 
-  /*
-  //Get data link to force app to show new updates to the database on screen - use for light testing purposes only
-  <div>
-    <a href="/get-data">Load Data</a>
-  </div>
-  */
+/*
+//Get data link to force app to show new updates to the database on screen - use for light testing purposes only
+<div>
+  <a href="/get-data">Load Data</a>
+</div>
+*/
   
 
 
