@@ -136,7 +136,7 @@ export default class User extends Component {
                   <div class="form-group col-md-6">
                     <button
                       type="button"
-                      class="btn btn-primary"
+                      class="btn btn-outline-success"
                       data-toggle="modal"
                       data-target="#exampleModalCenter"
                     >
@@ -350,7 +350,9 @@ export default class User extends Component {
           </div>
         </div>
         <form action="/logout" method="post">
-          <button type="submit">Log Out</button>
+          <button type="submit" class="btn btn-outline-danger">
+            Log Out
+          </button>
         </form>
       </div>
     );
