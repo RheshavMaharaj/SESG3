@@ -8,7 +8,7 @@ import "./Home.css";
 
 //Class and subsequent functions
 class Home extends Component {
-  state = { books: [], test: "", results: [] };
+  state = { books: [], test: "", results: [], username: "" };
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
@@ -21,6 +21,9 @@ class Home extends Component {
     fetch("/search-results")
       .then((res) => res.json())
       .then((results) => this.setState({ results }));
+    fetch("/get-session-user")
+      .then((res) => res.json())
+      .then((username) => this.setState({ username }));
   }
 
   render() {
@@ -72,7 +75,9 @@ class Home extends Component {
             <span className="sr-only">Next</span>
           </a>
         </div>
-
+        <div>
+          <h1> Welcome {this.state.username} </h1>
+        </div>
         <div className="searchbar">
           <form
             class="form-inline d-flex justify-content-center md-form form-sm active-purple-2 mt-2"
@@ -131,6 +136,10 @@ class Home extends Component {
   }
 }
 
+function UserView(props){
+
+}
+
 function BookDetails(props) {
   var BookContent = props.BookContent;
   var BookAuthor = props.BookAuthor;
@@ -176,9 +185,9 @@ function BookDetails(props) {
             </div>
             <div class="modal-body">
               <div>
-                <label>Title: {BookTitle}</label>
-                <label>Description: {BookContent}</label>
-                <label>Author: {BookAuthor}</label>
+                <label>Title: {BookTitle} </label> <br/>
+                <label>Description: {BookContent} </label> <br/>
+                <label>Author: {BookAuthor} </label> <br/>
               </div>
             </div>
             <div class="modal-footer">
