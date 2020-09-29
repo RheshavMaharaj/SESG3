@@ -6,6 +6,8 @@ import "./App.css";
 import about from "./Assets/help.svg";
 import home from "./Assets/home-run.svg";
 import user from "./Assets/user.svg";
+import follow from "./Assets/follow.svg";
+import enter from "./Assets/enter.svg";
 
 import Home from "./Home.js";
 import About from "./About.js";
@@ -13,6 +15,7 @@ import User from "./User.js";
 import Login from "./Login.js";
 import SplashScreen from "./SplashScreen";
 import SignUp from "./SignUp.js";
+//import SearchResults from './SearchResults.js';
 
 class Navbar extends Component {
   state = { status: false, username: "" };
@@ -54,6 +57,11 @@ class Navbar extends Component {
               <Route path="/user">
                 <User />
               </Route>
+              {/*}
+              <Route path="/search-error">
+                <SearchResults />
+              </Route>
+              */}
               <Route path="/">
                 <SplashScreen />
               </Route>
@@ -114,14 +122,11 @@ function IsLoggedIn(props) {
 function IsLoggedOut(props) {
   return (
     <nav>
-      <Link to="/">
-        <img src={user} className="App-logo" alt="home" />
-      </Link>
       <Link to="/signup">
-        <img src={home} className="App-logo" alt="about" />
+        <img src={follow} className="App-logo" alt="about" />
       </Link>
       <Link to="/login">
-        <img src={about} className="App-logo" alt="user" />
+        <img src={enter} className="App-logo" alt="user" />
       </Link>
     </nav>
   );

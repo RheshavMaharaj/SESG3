@@ -21,7 +21,7 @@ function Greeting(props) {
           <Col>
             <Card bg={"light"} style={{ width: "18rem-" }}>
               <Card.Body>
-                <Form>
+                <Form action="/insert-user" method="post">
                   <Form.Group controlId="registerFormFirstName">
                     <Form.Label>First Name</Form.Label>
                     <Form.Control

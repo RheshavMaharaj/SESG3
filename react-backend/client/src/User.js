@@ -349,6 +349,9 @@ export default class User extends Component {
             <div class="col-4 bg-primary text-white">book information</div>
           </div>
         </div>
+        <form action="/logout" method="post">
+          <button type="submit">Log Out</button>
+        </form>
       </div>
     );
   }

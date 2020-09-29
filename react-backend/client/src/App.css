@@ -5,11 +5,11 @@
 
 .App-logo {
   height: 25px;
-  margin: 15px;
+  margin: 10px;
 }
 
 .Toolbar {
-  background-color: #26ac9a;
+  background-color: #2558ff;
   min-height: 50px;
   display: flex;
   align-items: center;
@@ -19,8 +19,6 @@
   font-size: 20px;
   color: rgb(0, 0, 0);
 }
-
-
 
 /* Navbar container */
 .navbar {

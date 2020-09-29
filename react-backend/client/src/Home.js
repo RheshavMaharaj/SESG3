@@ -8,7 +8,7 @@ import "./Home.css";
 
 //Class and subsequent functions
 class Home extends Component {
-  state = { books: [], test: "" };
+  state = { books: [], test: "", results: [] };
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
@@ -18,11 +18,14 @@ class Home extends Component {
     fetch("/test")
       .then((res) => res.json())
       .then((test) => this.setState({ test }));
+    fetch("/search-results")
+      .then((res) => res.json())
+      .then((results) => this.setState({ results }));
   }
 
   render() {
     return (
-      <div>
+      <div className="home">
         {/* Highlight Carousel imported from bootstrap example code. May be removed */}
         <div
           id="carouselExampleControls"
@@ -69,81 +72,418 @@ class Home extends Component {
             <span className="sr-only">Next</span>
           </a>
         </div>
-        {/*
-        //Get data link to force app to show new updates to the database on screen - use for light testing purposes only
-        <div>
-          <a href="/get-data">Load Data</a>
+
+        <div className="searchbar">
+          <form
+            class="form-inline d-flex justify-content-center md-form form-sm active-purple-2 mt-2"
+            action="/search"
+            method="post"
+          >
+            <input
+              class="form-control form-control-sm mr-3 w-75"
+              id="search"
+              name="search"
+              type="text"
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <button class="btn btn-primary" type="submit">
+              Search
+            </button>
+          </form>
         </div>
-        */}
         <div className="list-group">
-          {/* Loop to display the resource data into a bootstrap wrapped element. */}
-          <h3>Your Resources</h3>
-          {this.state.books.map((book) => (
-            <div key={book._id}>
+          <h3>Search Results</h3>
+          {this.state.results.map((result) => (
+            <div key={result._id}>
               <button
                 type="button"
                 className="list-group-item list-group-item-action"
+                data-toggle="modal"
+                data-target="#exampleModalCenterBorrow"
               >
-                {" "}
-                {book.title}{" "}
+                {result.title}
               </button>
-              {/* || Description: {user.content} || Developer: {user.author} */}
             </div>
           ))}
         </div>
-        {/* Form to insert documents into the mongodb database collection */}
-        <div>
-          <form action="/insert" method="post" className="insert-form">
-            <h3>Add Resource to Catalogue</h3>
-            <div class="form-group">
-              <label for="Title">Resource Title</label>
-              <input
-                type="text"
-                class="form-control"
-                id="title"
-                name="title"
-                placeholder="Enter title"
+        <BorrowBook />
+        <div className="admin-control">
+          <AddBook />
+          <RemoveBook />
+          <EditBook />
+        </div>
+        <div className="list-group">
+          <h3>Your Resources</h3>
+          {this.state.books.map((book) => (
+            <div key={book._id}>
+              <BookDetails
+                BookTitle={book.title}
+                BookContent={book.content}
+                BookAuthor={book.author}
+                BookID={book._id}
               />
             </div>
-            <div class="form-group">
-              <label for="Description">Description</label>
-              <input
-                type="text"
-                class="form-control"
-                id="description"
-                name="description"
-                placeholder="Enter Resource Description"
-              />
-            </div>
-            <div class="form-group">
-              <label for="Author">Author</label>
-              <input
-                type="text"
-                class="form-control"
-                id="author"
-                name="author"
-                placeholder="Enter Resource Author(s)"
-              />
-            </div>
-            <div class="form-group">
-              <label for="Reference Number">Reference Number</label>
-              <input
-                type="number"
-                class="form-control"
-                id="refnumber"
-                name="refnumber"
-                placeholder="Enter Resource Reference Number"
-              />
-            </div>
-            <button type="submit" class="btn btn-primary">
-              Submit
-            </button>
-          </form>
-          {this.state.test}
+          ))}
         </div>
       </div>
     );
   }
 }
 
+function BookDetails(props) {
+  var BookContent = props.BookContent;
+  var BookAuthor = props.BookAuthor;
+
+  var BookID = props.BookID;
+  var BookTitle = props.BookTitle;
+
+  var ModalTarget = "#exampleModalCenter" + BookID;
+  var ModalTargetID = "exampleModalCenter" + BookID;
+
+  return (
+    <div>
+      <button
+        type="button"
+        className="list-group-item list-group-item-action"
+        data-toggle="modal"
+        data-target={ModalTarget}
+      >
+        {BookTitle}
+      </button>
+      <div
+        class="modal fade"
+        id={ModalTargetID}
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">
+                Book Details
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <label>Title: {BookTitle}</label>
+                <label>Description: {BookContent}</label>
+                <label>Author: {BookAuthor}</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BorrowBook() {
+  return (
+    <div>
+      <div
+        class="modal fade"
+        id="exampleModalCenterBorrow"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">
+                Would you like to borrow this book?
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" class="btn btn-primary">
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AddBook() {
+  return (
+    <div>
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#exampleModalCenter"
+      >
+        Add a Resource
+      </button>
+      <div
+        class="modal fade"
+        id="exampleModalCenter"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">
+                Add a new Resource
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <form action="/insert" method="post" className="insert-form">
+                  <div class="form-group">
+                    <label for="Title">Resource Title</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="title"
+                      name="title"
+                      placeholder="Enter title"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="Description">Description</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="description"
+                      name="description"
+                      placeholder="Enter Resource Description"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="Author">Author</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="author"
+                      name="author"
+                      placeholder="Enter Resource Author(s)"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="Reference Number">Reference Number</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="refnumber"
+                      name="refnumber"
+                      placeholder="Enter Resource Reference Number"
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    Submit
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RemoveBook() {
+  return (
+    <div>
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#exampleModalCenterRemove"
+      >
+        Remove a Resource
+      </button>
+      <div
+        class="modal fade"
+        id="exampleModalCenterRemove"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">
+                Remove a Resource
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <form action="/remove" method="post" className="insert-form">
+                  <div class="form-group">
+                    <label for="Title">Resource Title</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="title"
+                      name="title"
+                      placeholder="Enter title"
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    Submit
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EditBook() {
+  return (
+    <div>
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#exampleModalCenterEdit"
+      >
+        Edit a Resource
+      </button>
+      <div
+        class="modal fade"
+        id="exampleModalCenterEdit"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">
+                Edit a Resource
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <form action="/edit" method="post" className="insert-form">
+                  <div class="form-group">
+                    <label for="Title">Resource Title</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="title"
+                      name="title"
+                      placeholder="Enter title"
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    Submit
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default Home;
+
+/*
+//Get data link to force app to show new updates to the database on screen - use for light testing purposes only
+<div>
+  <a href="/get-data">Load Data</a>
+</div>
+*/

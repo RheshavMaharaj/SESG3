@@ -200,7 +200,7 @@ export default class About extends Component {
               as a project for uni etc etc etc
             </t3>
             <div>
-              <img src={help} width="200" height="200" />
+              <img src={help} width="200" height="200" alt="help" />
             </div>
           </div>
         </div>
