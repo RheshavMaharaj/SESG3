@@ -35,7 +35,7 @@ class Navbar extends Component {
         <div>
           <div className="Toolbar">
             <img src={logo} className="App-logo" alt="logo" />
-            eLibrary Suite
+            <div class="font-weight-bold">eLibrary Suite</div>
             <div>
               <LoginStatus LoggedIn={this.state.status} />
             </div>
