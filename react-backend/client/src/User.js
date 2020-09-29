@@ -4,7 +4,12 @@ export default class User extends Component{
   
   render(){
     return(
-      <h1>This is the User screen</h1>
+      <div>
+        <h1>This is the User screen</h1>
+        <form action="/logout" method="post">
+          <button type="submit">Log Out</button>
+        </form>
+      </div>
     )
   }
 }

@@ -11,6 +11,8 @@ import './App.css';
 import about from './Assets/help.svg';
 import home from './Assets/home-run.svg';
 import user from './Assets/user.svg';
+import follow from './Assets/follow.svg';
+import enter from './Assets/enter.svg';
 
 import Home from './Home.js';
 import About from './About.js';
@@ -98,9 +100,8 @@ function IsLoggedIn(props){
 function IsLoggedOut(props){
   return (
     <nav>
-      <Link to="/"><img src={user} className="App-logo" alt="home" /></Link>
-      <Link to="/signup"><img src={home} className="App-logo" alt="about" /></Link>
-      <Link to="/login"><img src={about} className="App-logo" alt="user" /></Link>
+      <Link to="/signup"><img src={follow} className="App-logo" alt="about" /></Link>
+      <Link to="/login"><img src={enter} className="App-logo" alt="user" /></Link>
     </nav>
   )
 }

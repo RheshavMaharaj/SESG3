@@ -117,6 +117,13 @@ router.get('/login-status', function(req, res) {
   
 });
 
+router.post('/logout', function(req, res){
+  req.session.destroy(function(){
+    console.log("user logged out.");
+  });
+  res.redirect('/login');
+});
+
 router.get('/get-session-user', function(req,res,next) {
   var userID = req.session.user.first_name;
   res.json(userID);
