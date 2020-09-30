@@ -68,13 +68,16 @@ class Home extends Component {
             <h3>Search Results</h3>
             {this.state.results.map((result) => (
               <div key={result._id}>
-                <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenterBorrow">
-                  {result.title}
-                </button>
+                <BorrowBook 
+                  BookTitle={result.title}
+                  BookContent={result.content}
+                  BookAuthor={result.author}
+                  BookRef={result.refnumber}
+                />
               </div>
             ))}
           </div>
-          <BorrowBook />
+          
 
         </div>
         <UserView type = {this.state.userType} />
@@ -129,13 +132,7 @@ function Staff() {
           Book Request
         </button>
       </div>
-      <div
-        class="modal fade"
-        id="exampleModalCenter"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"
       >
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -291,9 +288,19 @@ function BookDetails(props) {
   );
 }
 
-function BorrowBook() {
+function BorrowBook(props) {
+
+  var BookContent = props.BookContent;
+  var BookAuthor = props.BookAuthor;
+
+  var BookRef = props.BookRef;
+  var BookTitle = props.BookTitle;
+
   return (
     <div>
+      <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenterBorrow">
+        {BookTitle}
+      </button>
       <div class="modal fade" id="exampleModalCenterBorrow" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -301,15 +308,20 @@ function BorrowBook() {
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Would you like to borrow this book?
               </h5>
+            </div>
+            <div className="modal-body">
               <form action="/borrow" method="post">
+                <div>
+                  <label>Title: </label><label>{BookTitle}</label><input type="hidden" id="title" name="title" value={BookTitle}/> <br/>
+                  <label>Content: </label><label>{BookContent}</label><input type="hidden" id="content" name="content" value={BookContent} /><br/>
+                  <label>Author: </label><label>{BookAuthor}</label><input type="hidden" id="author" name="author" value={BookAuthor}/> <br/>
+                  <label>refnumber: </label><label>{BookRef}</label><input type="hidden" id="refnumber" name="refnumber" value={BookRef} /> <br/>
+                </div>
                 <button type="submit" class="btn btn-primary">
                   Submit
                 </button>
               </form>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
+            </div>  
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close

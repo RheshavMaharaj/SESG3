@@ -154,7 +154,7 @@ router.post('/borrow', function(req,res,next){
     if (err) throw err;
     const db = client.db(dbName);
     var myquery = { email: req.session.user.email };
-    var newvalues = { $push: { books: { title: 'Welcome', content: "This is your guide to using this website", author: 'J Jonah Jameson', refnumber: 1234567 } } };
+    var newvalues = { $push: { books: { title: req.body.title, content: req.body.content, author: req.body.author, refnumber: req.body.refnumber } } };
     db.collection('User').updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
       console.log("1 document updated");
