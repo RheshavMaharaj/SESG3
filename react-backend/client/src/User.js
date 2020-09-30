@@ -66,7 +66,7 @@ export default class User extends Component {
                         type="number"
                         class="form-control"
                         id="disabledTextInput"
-                        placeholder="13000000"
+                        placeholder={this.state.user.iden_number}
                         disabled
                       />
                     </div>
@@ -121,7 +121,7 @@ export default class User extends Component {
                         type="text"
                         id="disabledTextInput"
                         class="form-control"
-                        placeholder="example faculty- engineering"
+                        placeholder={this.state.user.faculty}
                         disabled
                       />
                     </div>

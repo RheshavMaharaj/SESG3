@@ -8,13 +8,13 @@ import "./Home.css";
 
 //Class and subsequent functions
 class Home extends Component {
-  state = { books: [], test: "", results: [], userType: "Admin" };
+  state = { books: [], test: "", results: [], userType: "Student", borrow: "" };
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
-    fetch("/get-data")
-      .then((res) => res.json())
-      .then((books) => this.setState({ books }));
+    //fetch("/get-data")
+    //  .then((res) => res.json())
+    //  .then((books) => this.setState({ books }));
     fetch("/test")
       .then((res) => res.json())
       .then((test) => this.setState({ test }));
@@ -24,6 +24,9 @@ class Home extends Component {
     fetch("/get-user-type")
       .then((res) => res.json())
       .then((userType) => this.setState({ userType }));
+    fetch("/get-user-resources")
+      .then((res) => res.json())
+      .then((books) => this.setState({ books }));
   }
 
   render() {
@@ -291,39 +294,25 @@ function BookDetails(props) {
 function BorrowBook() {
   return (
     <div>
-      <div
-        class="modal fade"
-        id="exampleModalCenterBorrow"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id="exampleModalCenterBorrow" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Would you like to borrow this book?
               </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <form action="/borrow" method="post">
+                <button type="submit" class="btn btn-primary">
+                  Submit
+                </button>
+              </form>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
-              </button>
-              <button type="button" class="btn btn-primary">
-                Submit
               </button>
             </div>
           </div>

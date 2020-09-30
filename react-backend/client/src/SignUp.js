@@ -40,6 +40,15 @@ function Greeting(props) {
                       placeholder="Enter Your Last Name"
                     />
                   </Form.Group>
+                  <Form.Group controlId="registerFormPassword">
+                    <Form.Label>University ID</Form.Label>
+                    <Form.Control
+                      type="number"
+                      id="iden_number"
+                      name="iden_number"
+                      placeholder="University Identification Number"
+                    />
+                  </Form.Group>
                   <Form.Group controlId="registerFormEmail">
                     <Form.Label>Email</Form.Label>
                     <Form.Control
@@ -59,12 +68,21 @@ function Greeting(props) {
                     />
                   </Form.Group>
                   <Form.Group controlId="registerFormPassword">
-                    <Form.Label>Contact Number</Form.Label>
+                    <Form.Label>Password</Form.Label>
                     <Form.Control
                       type="password"
                       id="password"
                       name="password"
                       placeholder="Password"
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="registerFormPassword">
+                    <Form.Label>Faculty</Form.Label>
+                    <Form.Control
+                      type="text"
+                      id="faculty"
+                      name="faculty"
+                      placeholder="Which Faculty are you part of?"
                     />
                   </Form.Group>
                   <Form.Group controlId="registerFormUserType">
