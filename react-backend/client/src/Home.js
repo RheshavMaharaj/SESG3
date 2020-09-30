@@ -8,7 +8,7 @@ import "./Home.css";
 
 //Class and subsequent functions
 class Home extends Component {
-  state = { books: [], test: "", results: [], username: "" };
+  state = { books: [], test: "", results: [], userType: "Admin" };
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
@@ -21,103 +21,60 @@ class Home extends Component {
     fetch("/search-results")
       .then((res) => res.json())
       .then((results) => this.setState({ results }));
-    fetch("/get-session-user")
+    fetch("/get-user-type")
       .then((res) => res.json())
-      .then((username) => this.setState({ username }));
+      .then((userType) => this.setState({ userType }));
   }
 
   render() {
     return (
       <div className="home">
-        {/* Highlight Carousel imported from bootstrap example code. May be removed */}
-        <div
-          id="carouselExampleControls"
-          className="carousel slide"
-          data-ride="carousel"
-        >
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img className="d-block w-100" src={formula1} alt="First slide" />
-            </div>
-            <div className="carousel-item">
-              <img
-                className="d-block w-100"
-                src={formula2}
-                alt="Second slide"
-              />
-            </div>
-            <div className="carousel-item">
-              <img className="d-block w-100" src={sunset} alt="Third slide" />
-            </div>
-          </div>
-          <a
-            className="carousel-control-prev"
-            href="#carouselExampleControls"
-            role="button"
-            data-slide="prev"
-          >
-            <span
-              className="carousel-control-prev-icon"
-              aria-hidden="true"
-            ></span>
-            <span className="sr-only">Previous</span>
-          </a>
-          <a
-            className="carousel-control-next"
-            href="#carouselExampleControls"
-            role="button"
-            data-slide="next"
-          >
-            <span
-              className="carousel-control-next-icon"
-              aria-hidden="true"
-            ></span>
-            <span className="sr-only">Next</span>
-          </a>
-        </div>
         <div>
-          <h1> Welcome {this.state.username} </h1>
-        </div>
-        <div className="searchbar">
-          <form
-            class="form-inline d-flex justify-content-center md-form form-sm active-purple-2 mt-2"
-            action="/search"
-            method="post"
-          >
-            <input
-              class="form-control form-control-sm mr-3 w-75"
-              id="search"
-              name="search"
-              type="text"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-primary" type="submit">
-              Search
-            </button>
-          </form>
-        </div>
-        <div className="list-group">
-          <h3>Search Results</h3>
-          {this.state.results.map((result) => (
-            <div key={result._id}>
-              <button
-                type="button"
-                className="list-group-item list-group-item-action"
-                data-toggle="modal"
-                data-target="#exampleModalCenterBorrow"
-              >
-                {result.title}
-              </button>
+      
+          <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
+            <div className="carousel-inner">
+              <div className="carousel-item active">
+                <img className="d-block w-100" src={formula1} alt="First slide" />
+              </div>
+              <div className="carousel-item">
+                <img className="d-block w-100" src={formula2} alt="Second slide"/>
+              </div>
+              <div className="carousel-item">
+                <img className="d-block w-100" src={sunset} alt="Third slide" />
+              </div>
             </div>
-          ))}
+            <a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span className="sr-only">Previous</span>
+            </a>
+            <a className="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span className="sr-only">Next</span>
+            </a>
+          </div>
+
+          <div className="searchbar">
+            <form class="form-inline d-flex justify-content-center md-form form-sm active-purple-2 mt-2" action="/search" method="post">
+              <input class="form-control form-control-sm mr-3 w-75" id="search" name="search" type="text" placeholder="Search" aria-label="Search"/>
+              <button class="btn btn-primary" type="submit">
+                Search
+              </button>
+            </form>
+            </div>
+            <div className="list-group">
+            <h3>Search Results</h3>
+            {this.state.results.map((result) => (
+              <div key={result._id}>
+                <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenterBorrow">
+                  {result.title}
+                </button>
+              </div>
+            ))}
+          </div>
+          <BorrowBook />
+
         </div>
-        <BorrowBook />
-        <div className="admin-control">
-          <AddBook />
-          <RemoveBook />
-          <EditBook />
-        </div>
+        <UserView type = {this.state.userType} />
         <div className="list-group">
           <h3>Your Resources</h3>
           {this.state.books.map((book) => (
@@ -137,7 +94,132 @@ class Home extends Component {
 }
 
 function UserView(props){
+  var type = props.type;
 
+  if (type === "Student") {
+    return <Student />
+  }
+  else if (type === "Admin") {
+    return <Admin />
+  }
+  else if (type === "Staff") {
+    return <Staff />
+  }
+
+}
+
+function Admin() {
+  return (
+    <div className="admin-control">
+      <AddBook />
+      <RemoveBook />
+      <EditBook />
+    </div>
+  )
+}
+
+function Staff() {
+  return(
+    <div className="admin-control">
+      <div className="button-container">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+          Book Request
+        </button>
+      </div>
+      <div
+        class="modal fade"
+        id="exampleModalCenter"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">
+                Submit a Book Request
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <form action="/book-request" method="post" className="insert-form">
+                  <div class="form-group">
+                    <label for="Title">Resource Title</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="title"
+                      name="title"
+                      placeholder="Enter title"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="Description">Description</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="description"
+                      name="description"
+                      placeholder="Enter Resource Description"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="Author">Author</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="author"
+                      name="author"
+                      placeholder="Enter Resource Author(s)"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="Reference Number">Reference Number</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="refnumber"
+                      name="refnumber"
+                      placeholder="Enter Resource Reference Number"
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    Submit
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function Student() {
+  return (
+    <div className="admin-control">
+      I am now showing the student view
+    </div>
+  )
 }
 
 function BookDetails(props) {

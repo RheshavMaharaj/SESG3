@@ -129,6 +129,16 @@ router.get('/get-session-user', function(req,res,next) {
   res.json(userID);
 });
 
+router.get('/get-user-type', function(req,res,next) {
+  var userType = req.session.user.user_type;
+  res.json(userType);
+});
+
+router.get('/get-user-info', function(req,res,next) {
+  var user = req.session.user;
+  res.json(user);
+});
+
 /* End Database Related Functions */
 
 module.exports = router;

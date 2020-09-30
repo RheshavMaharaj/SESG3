@@ -3,6 +3,15 @@ import React, { Component } from "react";
 import image1 from "./Assets/userplaceholder.png";
 
 export default class User extends Component {
+
+  state = { user: {} }
+  
+  componentDidMount() {
+    fetch("/get-user-info")
+      .then((res) => res.json())
+      .then((user) => this.setState({ user }));
+  }
+
   render() {
     return (
       <div>
@@ -30,7 +39,7 @@ export default class User extends Component {
                         type="text"
                         class="form-control"
                         id="disabledTextInput"
-                        placeholder="First example"
+                        placeholder={this.state.user.first_name}
                         disabled
                       />
                     </div>
@@ -42,7 +51,7 @@ export default class User extends Component {
                         type="text"
                         class="form-control"
                         id="disabledTextInput"
-                        placeholder="Last example"
+                        placeholder={this.state.user.last_name}
                         disabled
                       />
                     </div>
@@ -69,7 +78,7 @@ export default class User extends Component {
                         type="text"
                         class="form-control"
                         id="disabledTextInput"
-                        placeholder="student/staff"
+                        placeholder={this.state.user.user_type}
                         disabled
                       />
                     </div>
@@ -85,7 +94,7 @@ export default class User extends Component {
                         type="email"
                         class="form-control"
                         id="disabledTextInput"
-                        placeholder="Email@example"
+                        placeholder={this.state.user.email}
                         disabled
                       />
                     </div>
@@ -98,7 +107,7 @@ export default class User extends Component {
                         type="number"
                         class="form-control"
                         id="DisabledTextInput"
-                        placeholder="000000000"
+                        placeholder={this.state.user.contact_number}
                         disabled
                       />
                     </div>
