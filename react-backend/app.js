@@ -23,7 +23,7 @@ app.use(function (req, res, next) {
   var sessionID = req.sessionID; // Only available if you've enabled the express-session package.
   //var requestID = uuid.v4();
   //req.id = requestID; // In case other parts of the code require this ID.
-  console.log('timestamp: ' + timestamp, 'sessionID: ' + sessionID);
+  //console.log('timestamp: ' + timestamp, 'sessionID: ' + sessionID);
   next();
 });
 
