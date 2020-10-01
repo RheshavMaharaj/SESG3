@@ -138,6 +138,31 @@ router.post('/edit', function(req, res, next) {
   res.redirect('/home');
 });
 
+router.post('/book-request', function(req, res, next) {
+  var item = {
+    title: req.body.title,
+    content: req.body.description,
+    author: req.body.author,
+    refnumber: req.body.refnumber
+  }
+
+  MongoClient.connect(url, function(err, client){
+    assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
+
+    const db = client.db(dbName);
+
+    //Mongodb Insert function
+    db.collection('Requests').insertOne(item, function(err, result){
+      assert.equal(null, err);
+      console.log('Item inserted'); //logs on console on successful insertion
+      client.close(); //closing database
+    });
+
+  });
+  res.redirect('/home');
+});
+
+
 /* End Database Related Functions */
 
 module.exports = router;

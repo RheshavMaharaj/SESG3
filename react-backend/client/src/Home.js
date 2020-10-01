@@ -132,20 +132,14 @@ function Staff() {
           Book Request
         </button>
       </div>
-      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"
-      >
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Submit a Book Request
               </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -154,43 +148,19 @@ function Staff() {
                 <form action="/book-request" method="post" className="insert-form">
                   <div class="form-group">
                     <label for="Title">Resource Title</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="title"
-                      name="title"
-                      placeholder="Enter title"
-                    />
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" />
                   </div>
                   <div class="form-group">
                     <label for="Description">Description</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="description"
-                      name="description"
-                      placeholder="Enter Resource Description"
-                    />
+                    <input type="text" class="form-control" id="description" name="description" placeholder="Enter Resource Description" />
                   </div>
                   <div class="form-group">
                     <label for="Author">Author</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="author"
-                      name="author"
-                      placeholder="Enter Resource Author(s)"
-                    />
+                    <input type="text" class="form-control" id="author" name="author" placeholder="Enter Resource Author(s)" />
                   </div>
                   <div class="form-group">
                     <label for="Reference Number">Reference Number</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="refnumber"
-                      name="refnumber"
-                      placeholder="Enter Resource Reference Number"
-                    />
+                    <input type="number" class="form-control" id="refnumber" name="refnumber" placeholder="Enter Resource Reference Number" />
                   </div>
                   <button type="submit" class="btn btn-primary">
                     Submit
@@ -199,11 +169,7 @@ function Staff() {
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
               </button>
             </div>
@@ -234,34 +200,17 @@ function BookDetails(props) {
 
   return (
     <div>
-      <button
-        type="button"
-        className="list-group-item list-group-item-action"
-        data-toggle="modal"
-        data-target={ModalTarget}
-      >
+      <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target={ModalTarget}>
         {BookTitle}
       </button>
-      <div
-        class="modal fade"
-        id={ModalTargetID}
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id={ModalTargetID} tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Book Details
               </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -273,11 +222,7 @@ function BookDetails(props) {
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
               </button>
             </div>
@@ -342,26 +287,14 @@ function AddBook() {
           Add a Resource
         </button>
       </div>
-      <div
-        class="modal fade"
-        id="exampleModalCenter"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Add a new Resource
               </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -370,43 +303,19 @@ function AddBook() {
                 <form action="/insert" method="post" className="insert-form">
                   <div class="form-group">
                     <label for="Title">Resource Title</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="title"
-                      name="title"
-                      placeholder="Enter title"
-                    />
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" />
                   </div>
                   <div class="form-group">
                     <label for="Description">Description</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="description"
-                      name="description"
-                      placeholder="Enter Resource Description"
-                    />
+                    <input type="text" class="form-control" id="description" name="description" placeholder="Enter Resource Description" />
                   </div>
                   <div class="form-group">
                     <label for="Author">Author</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="author"
-                      name="author"
-                      placeholder="Enter Resource Author(s)"
-                    />
+                    <input type="text" class="form-control" id="author" name="author" placeholder="Enter Resource Author(s)" />
                   </div>
                   <div class="form-group">
                     <label for="Reference Number">Reference Number</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="refnumber"
-                      name="refnumber"
-                      placeholder="Enter Resource Reference Number"
-                    />
+                    <input type="number" class="form-control" id="refnumber" name="refnumber" placeholder="Enter Resource Reference Number" />
                   </div>
                   <button type="submit" class="btn btn-primary">
                     Submit
@@ -415,11 +324,7 @@ function AddBook() {
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
               </button>
             </div>
@@ -434,35 +339,18 @@ function RemoveBook() {
   return (
     <div>
       <div className="button-container">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-toggle="modal"
-          data-target="#exampleModalCenterRemove"
-        >
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterRemove">
           Remove a Resource
         </button>
       </div>
-      <div
-        class="modal fade"
-        id="exampleModalCenterRemove"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id="exampleModalCenterRemove" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Remove a Resource
               </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -471,13 +359,7 @@ function RemoveBook() {
                 <form action="/remove" method="post" className="insert-form">
                   <div class="form-group">
                     <label for="Title">Resource Title</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="title"
-                      name="title"
-                      placeholder="Enter title"
-                    />
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" />
                   </div>
                   <button type="submit" class="btn btn-primary">
                     Submit
@@ -486,11 +368,7 @@ function RemoveBook() {
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
               </button>
             </div>
