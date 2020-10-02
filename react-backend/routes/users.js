@@ -57,7 +57,6 @@ router.post('/insert-user', function(req, res, next) {
     contact_number: req.body.contact_number,
     user_type: req.body.user_type,
     books:[ { title: 'Welcome', content: "This is your guide to using this website", author: 'J Jonah Jameson', refnumber: 1234567 } ],
-    user_type: req.body.user_type,
     faculty: req.body.faculty,
     email: req.body.email,
     password: req.body.password
@@ -81,6 +80,31 @@ router.post('/insert-user', function(req, res, next) {
   res.redirect('/home');
 
 });
+
+
+router.post('/edit-user', function(req, res, next) {
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+    const db = client.db(dbName);
+    var myquery = { first_name: req.session.user.first_name };
+    var newvalues = { $set: {
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        iden_number: req.body.iden_number,
+        contact_number: req.body.contact_number,
+        faculty: req.body.faculty,
+        email: req.body.email,
+      }
+    }
+    db.collection('User').updateOne(myquery, newvalues, function(err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      client.close();
+    });
+  }); 
+  res.redirect('/user');
+});
+
 
 router.post('/handle-login', function(req,res,next) {
   var user;

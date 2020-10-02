@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import './User.css';
 
 import image1 from "./Assets/userplaceholder.png";
 
@@ -13,20 +14,11 @@ export default class User extends Component {
 
   render() {
     return (
-      <div>
+      <div className="user">
         <div class="container-fluid ">
-          <h1 align="center">This is the user account screen</h1>
-          <p align="center">
-            Here user can view/edit their personal information and review books
-            borrowed and history of brrowed books
-          </p>
           <div class="row">
             <div class="col-8 ">
-              <img
-                src={image1}
-                alt="User profile"
-                class="mr-5 mt-4 rounded-circle"
-              ></img>
+              <img src={image1} alt="User profile" class="mr-5 mt-4 rounded-circle"></img>
               <form>
                 <fieldset disabled>
                   <div class="form-row">
@@ -161,7 +153,7 @@ export default class User extends Component {
                             </button>
                           </div>
                           <div class="modal-body">
-                            <form class="was-validated">
+                            <form class="was-validated" id="change-details" action="/edit-user" method="post">
                               <div class="form-group">
                                 <label
                                   for="exampleFormControlFile1"
@@ -187,7 +179,8 @@ export default class User extends Component {
                                   <input
                                     type="text"
                                     class="form-control"
-                                    id="validationDefault01"
+                                    id="first_name"
+                                    name="first_name"
                                     placeholder="First name"
                                     required
                                   />
@@ -202,7 +195,8 @@ export default class User extends Component {
                                   <input
                                     type="text"
                                     class="form-control"
-                                    id="staticlast"
+                                    id="last_name"
+                                    name="last_name"
                                     placeholder="Last example"
                                     required
                                   />
@@ -217,40 +211,19 @@ export default class User extends Component {
                                   <input
                                     type="text"
                                     class="form-control"
-                                    id="staticid"
+                                    id="iden_number"
+                                    name="iden_number"
                                     maxlength="7"
                                     placeholder="13000000"
                                     required
                                   />
-                                </div>
-                                <div class="form-group col-md-6">
-                                  <label
-                                    for="usertype01"
-                                    class="font-weight-bold"
-                                  >
-                                    User Type
-                                  </label>
-                                  <div class="form-group">
-                                    <select
-                                      id="Select"
-                                      class="form-control"
-                                      required
-                                    >
-                                      <option value="">Select User Type</option>
-                                      <option value="1">Student</option>
-                                      <option value="2">University</option>
-                                    </select>
-                                    <div class="invalid-feedback">
-                                      Please select a valid user type
-                                    </div>
-                                  </div>
                                 </div>
                               </div>
 
                               <div class="form-row">
                                 <div class="form-group col-md-6">
                                   <label
-                                    for="inputEmail3"
+                                    for="email"
                                     class="font-weight-bold"
                                   >
                                     Email
@@ -259,7 +232,8 @@ export default class User extends Component {
                                   <input
                                     type="email"
                                     class="form-control"
-                                    id="staticEmail01"
+                                    id="email"
+                                    name="email"
                                     placeholder="Email@example"
                                     required
                                   />
@@ -276,7 +250,8 @@ export default class User extends Component {
                                     type="text"
                                     class="form-control"
                                     maxlength="10"
-                                    id="inputNumber"
+                                    id="contact_number"
+                                    name="contact_number"
                                     placeholder="000000000"
                                     required
                                   />
@@ -292,7 +267,8 @@ export default class User extends Component {
                                   </label>
                                   <input
                                     type="text"
-                                    id="InputFaculty"
+                                    id="faculty"
+                                    name="faculty"
                                     class="form-control"
                                     placeholder="example faculty- engineering"
                                     required
@@ -309,7 +285,7 @@ export default class User extends Component {
                             >
                               Close
                             </button>
-                            <button type="button" class="btn btn-primary">
+                            <button type="submit" form="change-details"class="btn btn-primary">
                               Save changes
                             </button>
                           </div>
@@ -321,14 +297,9 @@ export default class User extends Component {
               </form>
             </div>
 
-            <div class="col-4 bg-primary text-white">book information</div>
+            <div class="col-4 text-white">book information</div>
           </div>
         </div>
-        <form action="/logout" method="post">
-          <button type="submit" class="btn btn-outline-danger">
-            Log Out
-          </button>
-        </form>
       </div>
     );
   }

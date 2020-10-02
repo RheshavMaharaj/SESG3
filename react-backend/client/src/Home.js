@@ -8,7 +8,7 @@ import "./Home.css";
 
 //Class and subsequent functions
 class Home extends Component {
-  state = { books: [], test: "", results: [], userType: "Student", borrow: "" };
+  state = { books: [], test: "", results: [], userType: "Student", borrow: "", loading: true };
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
@@ -18,85 +18,109 @@ class Home extends Component {
     fetch("/test")
       .then((res) => res.json())
       .then((test) => this.setState({ test }));
-    fetch("/search-results")
-      .then((res) => res.json())
-      .then((results) => this.setState({ results }));
     fetch("/get-user-type")
       .then((res) => res.json())
       .then((userType) => this.setState({ userType }));
+    fetch("/search-results")
+      .then((res) => res.json())
+      .then((results) => this.setState({ results }));
     fetch("/get-user-resources")
       .then((res) => res.json())
-      .then((books) => this.setState({ books }));
+      .then((books) => this.setState({ books }))
+      .then((loading) => this.setState({ loading: false }));
   }
 
   render() {
     return (
-      <div className="home">
-        <div>
-      
-          <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
-            <div className="carousel-inner">
-              <div className="carousel-item active">
-                <img className="d-block w-100" src={formula1} alt="First slide" />
-              </div>
-              <div className="carousel-item">
-                <img className="d-block w-100" src={formula2} alt="Second slide"/>
-              </div>
-              <div className="carousel-item">
-                <img className="d-block w-100" src={sunset} alt="Third slide" />
-              </div>
+      <div>
+        <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
+          <div className="carousel-inner">
+            <div className="carousel-item active">
+              <img className="d-block w-100" src={formula1} alt="First slide" />
             </div>
-            <a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span className="sr-only">Previous</span>
-            </a>
-            <a className="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-              <span className="carousel-control-next-icon" aria-hidden="true"></span>
-              <span className="sr-only">Next</span>
-            </a>
-          </div>
-
-          <div className="searchbar">
-            <form class="form-inline d-flex justify-content-center md-form form-sm active-purple-2 mt-2" action="/search" method="post">
-              <input class="form-control form-control-sm mr-3 w-75" id="search" name="search" type="text" placeholder="Search" aria-label="Search"/>
-              <button class="btn btn-primary" type="submit">
-                Search
-              </button>
-            </form>
+            <div className="carousel-item">
+              <img className="d-block w-100" src={formula2} alt="Second slide"/>
             </div>
-            <div className="list-group">
-            <h3>Search Results</h3>
-            {this.state.results.map((result) => (
-              <div key={result._id}>
-                <BorrowBook 
-                  BookTitle={result.title}
-                  BookContent={result.content}
-                  BookAuthor={result.author}
-                  BookRef={result.refnumber}
-                />
-              </div>
-            ))}
+            <div className="carousel-item">
+              <img className="d-block w-100" src={sunset} alt="Third slide" />
+            </div>
           </div>
-          
-
+          <a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="sr-only">Previous</span>
+          </a>
+          <a className="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="sr-only">Next</span>
+          </a>
         </div>
-        <UserView type = {this.state.userType} />
-        <div className="list-group">
-          <h3>Your Resources</h3>
-          {this.state.books.map((book) => (
-            <div key={book._id}>
-              <BookDetails
-                BookTitle={book.title}
-                BookContent={book.content}
-                BookAuthor={book.author}
-                BookID={book._id}
-              />
+        <div className="home">
+          <div>
+            <div className="searchbar">
+              <form class="form-inline d-flex justify-content-center md-form form-sm active-purple-2 mt-2" action="/search" method="post">
+                <input class="form-control form-control-sm mr-3 w-75" id="search" name="search" type="text" placeholder="Search" aria-label="Search"/>
+                <button class="btn btn-primary" type="submit">
+                  Search
+                </button>
+              </form>
+              </div>
+              <div className="list-group">
+              <h3>Search Results</h3>
+              {this.state.results.map((result) => (
+                <div key={result._id}>
+                  <BorrowBook 
+                    BookTitle={result.title}
+                    BookContent={result.content}
+                    BookAuthor={result.author}
+                    BookRef={result.refnumber}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+          <UserView type = {this.state.userType} />
+          <div className="list-group">
+            <h3>Your Resources</h3>
+            <Loading 
+              loading = {this.state.loading}
+              books = {this.state.books}
+            />
+          </div>
         </div>
       </div>
+      
     );
   }
+}
+
+function Loading(props) {
+  var loading = props.loading;
+  var books = props.books;
+
+  if (loading) {
+    return (
+      <div class="d-flex justify-content-center m-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    )
+  }
+  else if(!loading) {
+    return (
+      books.map((book) => (
+        <div key={book._id}>
+          <BookDetails
+            BookTitle={book.title}
+            BookContent={book.content}
+            BookAuthor={book.author}
+            BookRef={book.refnumber}
+          />
+        </div>
+      ))
+    )
+  }
+  
 }
 
 function UserView(props){
@@ -192,11 +216,11 @@ function BookDetails(props) {
   var BookContent = props.BookContent;
   var BookAuthor = props.BookAuthor;
 
-  var BookID = props.BookID;
+  var BookRef = props.BookRef;
   var BookTitle = props.BookTitle;
 
-  var ModalTarget = "#exampleModalCenter" + BookID;
-  var ModalTargetID = "exampleModalCenter" + BookID;
+  var ModalTarget = "#exampleModalCenter" + BookRef;
+  var ModalTargetID = "exampleModalCenter" + BookRef;
 
   return (
     <div>

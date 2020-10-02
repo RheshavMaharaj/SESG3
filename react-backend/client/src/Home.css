@@ -25,7 +25,7 @@
 }
 
 .searchbar {
-  
+  margin-top: 20px;
   margin-left: 30%;
   margin-right: 30%;
 }
@@ -40,6 +40,12 @@
 .button-container {
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.home{
+  margin-left: 15%;
+  margin-right: 15%;
+
 }
 
 /*

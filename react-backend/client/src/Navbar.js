@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import logo from "./logo.svg";
-import "./App.css";
+import "./Navbar.css";
 import about from "./Assets/help.svg";
 import home from "./Assets/home-run.svg";
 import user from "./Assets/user.svg";
@@ -17,7 +17,7 @@ import SplashScreen from "./SplashScreen";
 import SignUp from "./SignUp.js";
 //import SearchResults from './SearchResults.js';
 
-import notification from "./Assets/notification.svg";
+//import notification from "./Assets/notification.svg";
 
 class Navbar extends Component {
   state = { status: false, username: "" };
@@ -86,36 +86,25 @@ function LoginStatus(props) {
 function IsLoggedIn(props) {
   return (
     <nav>
-      <button
-        className="btn dropdown-toggle"
-        type="button"
-        id="dropdownMenuButton"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-        color="white"
-      >
-        <img src={user} className="App-logo" alt="notification" />
-        <span class="badge badge-light">3</span>
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item">
-          <Link to="/user">User Account</Link>
-        </a>
-        <a class="dropdown-item">
-          <form action="/logout" method="post">
-            <button type="submit" class="btn btn-outline-danger">
-              Log Out
-            </button>
-          </form>
-        </a>
-      </div>
       <Link to="/home">
         <img src={home} className="App-logo" alt="home" />
       </Link>
       <Link to="/about">
         <img src={about} className="App-logo" alt="about" />
       </Link>
+      <img src={user} className="App-logo" alt="account" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" color="white"/>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <Link to="/user">
+          <button class="drop-button">
+            Account
+          </button>
+        </Link>
+        <form action="/logout" method="post">
+          <button type="submit" class="drop-button">
+            Log Out
+          </button>
+        </form>
+      </div>
     </nav>
   );
 }
