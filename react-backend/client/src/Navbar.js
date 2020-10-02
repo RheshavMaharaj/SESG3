@@ -17,6 +17,8 @@ import SplashScreen from "./SplashScreen";
 import SignUp from "./SignUp.js";
 //import SearchResults from './SearchResults.js';
 
+import notification from './Assets/notification.svg';
+
 class Navbar extends Component {
   state = { status: false, username: "" };
 
@@ -84,25 +86,18 @@ function LoginStatus(props) {
 function IsLoggedIn(props) {
   return (
     <nav>
-      <button
-        class="btn btn-secondary dropdown-toggle"
-        type="button"
-        id="dropdownMenuButton"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
-        Notification
+      <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" color="white">
+        <img src={notification} className="App-logo" alt="notification" />
         <span class="badge badge-light">3</span>
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" href="https://github.com/">
           Action
         </a>
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" href="https://github.com/">
           Another action
         </a>
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" href="https://github.com/">
           Something else here
         </a>
       </div>
