@@ -17,7 +17,7 @@ import SplashScreen from "./SplashScreen";
 import SignUp from "./SignUp.js";
 //import SearchResults from './SearchResults.js';
 
-import notification from './Assets/notification.svg';
+import notification from "./Assets/notification.svg";
 
 class Navbar extends Component {
   state = { status: false, username: "" };
@@ -86,19 +86,28 @@ function LoginStatus(props) {
 function IsLoggedIn(props) {
   return (
     <nav>
-      <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" color="white">
-        <img src={notification} className="App-logo" alt="notification" />
+      <button
+        className="btn dropdown-toggle"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        color="white"
+      >
+        <img src={user} className="App-logo" alt="notification" />
         <span class="badge badge-light">3</span>
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="https://github.com/">
-          Action
+        <a class="dropdown-item">
+          <Link to="/user">User Account</Link>
         </a>
-        <a class="dropdown-item" href="https://github.com/">
-          Another action
-        </a>
-        <a class="dropdown-item" href="https://github.com/">
-          Something else here
+        <a class="dropdown-item">
+          <form action="/logout" method="post">
+            <button type="submit" class="btn btn-outline-danger">
+              Log Out
+            </button>
+          </form>
         </a>
       </div>
       <Link to="/home">
@@ -106,9 +115,6 @@ function IsLoggedIn(props) {
       </Link>
       <Link to="/about">
         <img src={about} className="App-logo" alt="about" />
-      </Link>
-      <Link to="/user">
-        <img src={user} className="App-logo" alt="user" />
       </Link>
     </nav>
   );

@@ -42,36 +42,16 @@ function Greeting(props) {
                       required
                     />
                   </Form.Group>
-                  <Form.Group controlId="registerGender">
-                    <label for="Select">Gender</label>
-                    <select id="Select" class="form-control" required>
-                      <option value="">Select a Gender</option>
-                      <option value="1">Male</option>
-                      <option value="2">Female</option>
-                      <option value="3">Other</option>
-                    </select>
-                    <div class="invalid-feedback">
-                      Please select a valid Gender
-                    </div>
-                  </Form.Group>
-                  <Form.Group controlId="registerId">
-                    <Form.Label for="idLabel">Identification Number</Form.Label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="staticid"
-                      maxlength="8"
-                      placeholder="e.g 12345678"
-                      required
-                    />
-                  </Form.Group>
+
                   <Form.Group controlId="registerFormPassword">
                     <Form.Label>University ID</Form.Label>
                     <Form.Control
-                      type="number"
+                      type="text"
                       id="iden_number"
                       name="iden_number"
+                      maxLength="7"
                       placeholder="University Identification Number"
+                      required
                     />
                   </Form.Group>
                   <Form.Group controlId="registerFormEmail">
@@ -128,16 +108,7 @@ function Greeting(props) {
                       Please select a valid user type
                     </div>
                   </Form.Group>
-                  <Form.Group controlId="registerFormUserFaculty">
-                    <Form.Label>User's Faculty</Form.Label>
-                    <Form.Control
-                      type="text"
-                      id="InputFaculty"
-                      class="form-control"
-                      placeholder="example faculty- engineering"
-                      required
-                    />
-                  </Form.Group>
+
                   <Form.Group controlId="registerFormCheckbox">
                     <Form.Check type="checkbox" label="Recaptcha" required />
                   </Form.Group>
