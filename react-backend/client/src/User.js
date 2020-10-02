@@ -3,9 +3,8 @@ import React, { Component } from "react";
 import image1 from "./Assets/userplaceholder.png";
 
 export default class User extends Component {
+  state = { user: {} };
 
-  state = { user: {} }
-  
   componentDidMount() {
     fetch("/get-user-info")
       .then((res) => res.json())
@@ -60,7 +59,7 @@ export default class User extends Component {
                   <div class="form-row">
                     <div class="form-group col-md-6">
                       <label for="idLabel" class="font-weight-bold">
-                        Identification Number
+                        University ID
                       </label>
                       <input
                         type="number"
@@ -124,18 +123,6 @@ export default class User extends Component {
                         placeholder={this.state.user.faculty}
                         disabled
                       />
-                    </div>
-                  </div>
-                  <div class="form-row">
-                    <div class="form-group col-md-6">
-                      <label for="disabledSelect" class="font-weight-bold">
-                        Gender
-                      </label>
-                      <select id="disabledSelect" class="form-control">
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Other</option>
-                      </select>
                     </div>
                   </div>
                 </fieldset>
@@ -225,7 +212,7 @@ export default class User extends Component {
                               <div class="form-row">
                                 <div class="form-group col-md-6">
                                   <label for="idLabel" class="font-weight-bold">
-                                    Identification Number
+                                    University ID
                                   </label>
                                   <input
                                     type="text"
@@ -310,26 +297,6 @@ export default class User extends Component {
                                     placeholder="example faculty- engineering"
                                     required
                                   />
-                                </div>
-                              </div>
-                              <div class="form-row">
-                                <div class="form-group col-md-6">
-                                  <label for="Select" class="font-weight-bold">
-                                    Gender
-                                  </label>
-                                  <select
-                                    id="Select"
-                                    class="form-control"
-                                    required
-                                  >
-                                    <option value="">Select a Gender</option>
-                                    <option value="1">Male</option>
-                                    <option value="2">Female</option>
-                                    <option value="3">Other</option>
-                                  </select>
-                                  <div class="invalid-feedback">
-                                    Please select a valid Gender
-                                  </div>
                                 </div>
                               </div>
                             </form>

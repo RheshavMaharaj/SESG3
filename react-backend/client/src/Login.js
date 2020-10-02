@@ -19,7 +19,7 @@ export default class Login extends Component {
 function Greeting(props) {
   return (
     <div class="col-md-6 offset-md-3 p-2">
-      <h2>Log In</h2>
+      <h2 class="font-weight-bold">Log In</h2>
 
       <Container>
         <Row md={{ span: 6, offset: 6 }}>
