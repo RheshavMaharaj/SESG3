@@ -12,9 +12,6 @@ class Home extends Component {
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
-    //fetch("/get-data")
-    //  .then((res) => res.json())
-    //  .then((books) => this.setState({ books }));
     fetch("/test")
       .then((res) => res.json())
       .then((test) => this.setState({ test }));
@@ -31,6 +28,7 @@ class Home extends Component {
   }
 
   render() {
+    console.log(this.state.results);
     return (
       <div>
         <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
@@ -55,30 +53,15 @@ class Home extends Component {
           </a>
         </div>
         <div className="home">
-          <div>
-            <div className="searchbar">
-              <form class="form-inline d-flex justify-content-center md-form form-sm active-purple-2 mt-2" action="/search" method="post">
-                <input class="form-control form-control-sm mr-3 w-75" id="search" name="search" type="text" placeholder="Search" aria-label="Search"/>
-                <button class="btn btn-primary" type="submit">
-                  Search
-                </button>
-              </form>
-              </div>
-              <div className="list-group">
-              <h3>Search Results</h3>
-              {this.state.results.map((result) => (
-                <div key={result._id}>
-                  <BorrowBook 
-                    BookTitle={result.title}
-                    BookContent={result.content}
-                    BookAuthor={result.author}
-                    BookRef={result.refnumber}
-                  />
-                </div>
-              ))}
-            </div>
+          <div className="searchbar">
+            <form class="form-inline d-flex justify-content-center md-form form-sm active-purple-2 mt-2" action="/search" method="post">
+              <input class="form-control form-control-sm mr-3 w-75" id="search" name="search" type="text" placeholder="Search" aria-label="Search"/>
+              <button class="btn btn-primary" type="submit">
+                Search
+              </button>
+            </form>
           </div>
-          <UserView type = {this.state.userType} />
+          <Search Results={this.state.results} />
           <div className="list-group">
             <h3>Your Resources</h3>
             <Loading 
@@ -86,10 +69,43 @@ class Home extends Component {
               books = {this.state.books}
             />
           </div>
+          <div className="fine-container">
+            Fine section
+          </div>
+          <UserView type = {this.state.userType} />
         </div>
       </div>
       
     );
+  }
+}
+
+function Search(props) {
+  var Results = props.Results;
+
+  if(!(Results.length >= 1 && Results[0].title === "Your Search Results returned Nothing")) {
+    return (
+      <div className="list-group">
+        <h3>Search Results</h3>
+        {Results.map((result) => (
+          <div key={result._id}>
+            <BorrowBook 
+              BookTitle={result.title}
+              BookContent={result.content}
+              BookAuthor={result.author}
+              BookRef={result.refnumber}
+            />
+          </div>
+        ))}
+      </div>
+    )
+  }
+  else {
+    return (
+      <div className="list-group text-center">
+        <h4>No Search Results</h4>
+      </div>
+    )
   }
 }
 

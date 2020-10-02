@@ -105,6 +105,7 @@ router.post('/edit-user', function(req, res, next) {
   res.redirect('/user');
 });
 
+var errMsg = false;
 
 router.post('/handle-login', function(req,res,next) {
   var user;
@@ -125,15 +126,23 @@ router.post('/handle-login', function(req,res,next) {
         if(user.email == req.body.email && user.password == req.body.password){
           req.session.user = user;
           console.log(user.first_name + " " + user.email);
+          errMsg = false;
           res.redirect('/home');
         }
-        else res.redirect('/login');
+        else {
+          errMsg = true;
+          res.redirect('/login');
+        }
       }
       client.close();
     });
 
   });
 
+});
+
+router.get('/get-errMsg', function(req,res) {
+  res.json(errMsg);
 });
 
 router.get('/login-status', function(req, res) {
@@ -189,12 +198,7 @@ router.post('/borrow', function(req,res,next){
 });
 
 router.get('/get-user-resources', function(req, res, next){
-  /*
-  var resultArray = req.session.user.books; //Used to store all the data into a local array to then be mapped in Home.js
   
-  //console.log(resultArray);
-  res.json(resultArray);
-  */
   var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
   var localUser;
   

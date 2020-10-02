@@ -47,10 +47,11 @@ var searchResults = []; //Used to store all the data into a local array to then 
 router.get('/search-results', function(req,res,next){
   
   var error = [{"_id": "01", 
-                "title":" Your Search Results returned Nothing"
+                "title":"Your Search Results returned Nothing"
               }];
   if(searchResults != 0){
     res.json(searchResults);
+    searchResults = [];
   }
   else res.json(error);
 

@@ -48,6 +48,14 @@
 
 }
 
+.fine-container {
+  min-height: 300px;
+  border-style: dashed;
+  border-width: 2px;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
 /*
 .footer {
   background-color: rgb(49, 49, 49);
