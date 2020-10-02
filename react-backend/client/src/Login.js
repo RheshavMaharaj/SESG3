@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
@@ -17,6 +17,19 @@ export default class Login extends Component {
 }
 
 function Greeting(props) {
+  const [validated, setValidated] = useState(false);
+
+  const handleLoginSubmit = (event) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    setValidated(true);
+    form.submit();
+  };
+
   return (
     // <div>
     //   <form action="/handle-login" method="post" className="insert-form">
@@ -54,10 +67,16 @@ function Greeting(props) {
           <Col>
             <Card bg={"light"} style={{ width: "18rem-" }}>
               <Card.Body>
-                <Form action="/handle-login" method="post">
+                <Form
+                  action="/handle-login"
+                  noValidate
+                  validated={validated}
+                  onSubmit={handleLoginSubmit}
+                >
                   <Form.Group controlId="loginFormEmail">
                     <Form.Label>Email</Form.Label>
                     <Form.Control
+                      required
                       type="email"
                       id="email"
                       name="email"
@@ -66,17 +85,26 @@ function Greeting(props) {
                     <Form.Text className="text-muted">
                       We'll never share your email with anyone else.
                     </Form.Text>
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid email.
+                    </Form.Control.Feedback>
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group controlId="loginFormPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control
+                      required
                       type="password"
                       id="password"
                       name="password"
                       placeholder="Password"
                     />
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                   </Form.Group>
+                  <Form.Control.Feedback type="invalid">
+                    Please provide a valid password.
+                  </Form.Control.Feedback>
                   <Form.Group controlId="loginFormCheckbox">
                     <Form.Check type="checkbox" label="Check Me ;)" />
                   </Form.Group>

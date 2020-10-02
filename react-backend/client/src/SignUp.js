@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Form from 'react-formal';
+import * as yup from yup;
 
 export default class SignUp extends Component {
   render() {
@@ -12,7 +13,36 @@ export default class SignUp extends Component {
   }
 }
 
+
+
+
+  const defaultStr = yup.string().default("");
+
+
+const registerSchema = yup.object({
+  name: yup.object({
+    first: defaultStr.required("Please enter your first name"),
+    last: defaultStr.required("Please enter your surname"),
+  }),
+  email: yup.string.email()
+});
+
+
+
 function Greeting(props) {
+  const [validated, setValidated] = useState(false);
+
+  const handleRegisterSubmit = (event) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    setValidated(true);
+    form.submit();
+  };
+
   return (
     <div class="col-md-6 offset-md-3 p-2">
       <h2>Sign Up</h2>
@@ -21,60 +51,90 @@ function Greeting(props) {
           <Col>
             <Card bg={"light"} style={{ width: "18rem-" }}>
               <Card.Body>
-                <Form action="/insert-user" method="post">
+                <Form
+                  schema = {registerSchema}
+                  defaultValue={registerSchema.default}
+                  action="/handle-login"
+                  noValidate
+                  validated={validated}
+                  onSubmit={handleRegisterSubmit}
+                  method="post"
+                >
                   <Form.Group controlId="registerFormFirstName">
                     <Form.Label>First Name</Form.Label>
                     <Form.Control
+                      required
                       type="text"
                       id="first_name"
                       name="first_name"
                       placeholder="Enter Your First Name"
                     />
+                    <Form.Control.Feedback>
+                      Please provide your first name!
+                    </Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group controlId="registerFormLastName">
                     <Form.Label>Last Name</Form.Label>
                     <Form.Control
+                      required
                       type="text"
                       id="last_name"
                       name="last_name"
                       placeholder="Enter Your Last Name"
                     />
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      Please provide your surname .
+                    </Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group controlId="registerFormEmail">
                     <Form.Label>Email</Form.Label>
                     <Form.Control
+                      required
                       type="email"
                       id="email"
                       name="email"
                       placeholder="Enter Email"
                     />
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid email.
+                    </Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group controlId="registerFormNumber">
                     <Form.Label>Contact Number</Form.Label>
                     <Form.Control
+                      required
                       type="number"
                       id="contact_number"
                       name="contact_number"
                       placeholder="Enter Contact Number (Mobile)"
                     />
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid phone number.
+                    </Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group controlId="registerFormPassword">
-                    <Form.Label>Contact Number</Form.Label>
+                    <Form.Label>Password</Form.Label>
                     <Form.Control
+                      required
                       type="password"
                       id="password"
                       name="password"
                       placeholder="Password"
                     />
+                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid password.
+                    </Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group controlId="registerFormUserType">
                     <Form.Label>User Type</Form.Label>
-                    <Form.Control
-                      type="text"
-                      id="user_type"
-                      name="user_type"
-                      placeholder="Are you a Staff Member or a Student?"
-                    />
+                    <Form.Control as="select">
+                      <option>Student</option>
+                      <option>Staff Member</option>
+                    </Form.Control>
                   </Form.Group>
                   <Form.Group controlId="registerFormCheckbox">
                     <Form.Check type="checkbox" label="Check Me ;)" />
@@ -122,3 +182,4 @@ function Greeting(props) {
     // </div>
   );
 }
+
