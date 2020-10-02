@@ -42,15 +42,23 @@ router.get('/get-users', function(req, res, next){
     });
 
   });
+
 });
+
+
 
 //Database insert function via router. Allows data updates on page loads
 router.post('/insert-user', function(req, res, next) {
+
   var item = {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
+    iden_number: req.body.iden_number,
     contact_number: req.body.contact_number,
     user_type: req.body.user_type,
+    books:[ { title: 'Welcome', content: "This is your guide to using this website", author: 'J Jonah Jameson', refnumber: 1234567 } ],
+    user_type: req.body.user_type,
+    faculty: req.body.faculty,
     email: req.body.email,
     password: req.body.password
   }
@@ -68,8 +76,10 @@ router.post('/insert-user', function(req, res, next) {
     });
 
   });
+
   req.session.user = item;
   res.redirect('/home');
+
 });
 
 router.post('/handle-login', function(req,res,next) {
@@ -138,6 +148,56 @@ router.get('/get-user-info', function(req,res,next) {
   var user = req.session.user;
   res.json(user);
 });
+
+router.post('/borrow', function(req,res,next){
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+    const db = client.db(dbName);
+    var myquery = { email: req.session.user.email };
+    var newvalues = { $push: { books: { title: req.body.title, content: req.body.content, author: req.body.author, refnumber: req.body.refnumber } } };
+    db.collection('User').updateOne(myquery, newvalues, function(err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      client.close();
+    });
+  }); 
+  res.redirect('/home');
+});
+
+router.get('/get-user-resources', function(req, res, next){
+  /*
+  var resultArray = req.session.user.books; //Used to store all the data into a local array to then be mapped in Home.js
+  
+  //console.log(resultArray);
+  res.json(resultArray);
+  */
+  var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
+  var localUser;
+  
+  MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
+    
+    assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
+    
+    const db = client.db(dbName);
+    
+    db.collection('User').findOne({ 
+      email: req.session.user.email
+    },
+    function(err, result) {
+      if (err) throw err;
+      localUser = result;
+      resultArray = localUser.books;
+
+      res.json(resultArray);
+      //console.log(resultArray);
+      client.close();
+    });
+
+  });
+
+});
+
+
 
 /* End Database Related Functions */
 
