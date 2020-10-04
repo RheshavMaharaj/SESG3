@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import './User.css';
+import "./User.css";
 
 import image1 from "./Assets/userplaceholder.png";
+import notification from "./Assets/notification.svg";
 
 export default class User extends Component {
   state = { user: {} };
@@ -18,7 +19,11 @@ export default class User extends Component {
         <div class="container-fluid ">
           <div class="row">
             <div class="col-8 ">
-              <img src={image1} alt="User profile" class="mr-5 mt-4 rounded-circle"></img>
+              <img
+                src={image1}
+                alt="User profile"
+                class="mr-5 mt-4 rounded-circle"
+              ></img>
               <form>
                 <fieldset disabled>
                   <div class="form-row">
@@ -153,7 +158,12 @@ export default class User extends Component {
                             </button>
                           </div>
                           <div class="modal-body">
-                            <form class="was-validated" id="change-details" action="/edit-user" method="post">
+                            <form
+                              class="was-validated"
+                              id="change-details"
+                              action="/edit-user"
+                              method="post"
+                            >
                               <div class="form-group">
                                 <label
                                   for="exampleFormControlFile1"
@@ -222,10 +232,7 @@ export default class User extends Component {
 
                               <div class="form-row">
                                 <div class="form-group col-md-6">
-                                  <label
-                                    for="email"
-                                    class="font-weight-bold"
-                                  >
+                                  <label for="email" class="font-weight-bold">
                                     Email
                                   </label>
 
@@ -285,7 +292,11 @@ export default class User extends Component {
                             >
                               Close
                             </button>
-                            <button type="submit" form="change-details"class="btn btn-primary">
+                            <button
+                              type="submit"
+                              form="change-details"
+                              class="btn btn-primary"
+                            >
                               Save changes
                             </button>
                           </div>
@@ -293,6 +304,104 @@ export default class User extends Component {
                       </div>
                     </div>
                   </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-froup col-md-6">
+                    <button
+                      type="button"
+                      class="btn btn-outline-warning"
+                      data-toggle="modal"
+                      data-target="#exampleModalCenter2"
+                    >
+                      Change Password
+                    </button>
+                    <div
+                      class="modal fade"
+                      id="exampleModalCenter2"
+                      tabindex="-1"
+                      role="dialog"
+                      aria-labelledby="exampleModalCenterTitle"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                              Set New Password
+                            </h5>
+                            <button
+                              type="button"
+                              class="close"
+                              data-dismiss="modal"
+                              aria-label="Close"
+                            >
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form
+                              class="was-validated"
+                              id="change-details"
+                              action="/edit-user"
+                              method="post"
+                            >
+                              <div class="form-row">
+                                <div class="form-group col-md-6">
+                                  <label for="newPass" class="font-weight-bold">
+                                    New Password
+                                  </label>
+
+                                  <input
+                                    type="password"
+                                    class="form-control"
+                                    id="newPass"
+                                    name="newPass"
+                                    placeholder="Enter new Password"
+                                    required
+                                  />
+                                </div>
+                              </div>
+                              <div class="form-row">
+                                <div class="form-group col-md-6">
+                                  <label
+                                    for="confirmPass"
+                                    class="font-weight-bold"
+                                  >
+                                    Confirm Password
+                                  </label>
+                                  <input
+                                    type="password"
+                                    id="confirmPass"
+                                    name="confirmPass"
+                                    class="form-control"
+                                    placeholder="Confirm Password"
+                                    required
+                                  />
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                            <button
+                              type="submit"
+                              form="change-details"
+                              class="btn btn-primary"
+                            >
+                              Save Changes
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  "
                 </div>
               </form>
             </div>
