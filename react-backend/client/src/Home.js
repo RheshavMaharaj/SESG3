@@ -1,8 +1,8 @@
 //Imports
 import React, { Component } from "react";
-import formula1 from "./Assets/f1.png";
-import formula2 from "./Assets/f2.png";
-import sunset from "./Assets/sunset.png";
+import library1 from "./Assets/library-1.jpg";
+import library2 from "./Assets/library-2.jpg";
+import library3 from "./Assets/library-3.jpg";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Home.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,7 +10,13 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 //Class and subsequent functions
 class Home extends Component {
-  state = { books: [], test: "", results: [], userType: "Student", borrow: "", loading: true };
+  state = { books: [], 
+            test: "", 
+            results: [], 
+            userType: "Student",
+            borrow: "", 
+            fines: [],
+            loading: true };
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
@@ -27,6 +33,9 @@ class Home extends Component {
       .then((res) => res.json())
       .then((books) => this.setState({ books }))
       .then((loading) => this.setState({ loading: false }));
+    fetch("/get-user-fines")
+      .then((res) => res.json())
+      .then((fines) => this.setState({ fines }))
   }
 
   render() {
@@ -36,13 +45,13 @@ class Home extends Component {
         <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
           <div className="carousel-inner">
             <div className="carousel-item active">
-              <img className="d-block w-100" src={formula1} alt="First slide" />
+              <img className="d-block w-100" src={library1} alt="First slide" />
             </div>
             <div className="carousel-item">
-              <img className="d-block w-100" src={formula2} alt="Second slide"/>
+              <img className="d-block w-100" src={library2} alt="Second slide"/>
             </div>
             <div className="carousel-item">
-              <img className="d-block w-100" src={sunset} alt="Third slide" />
+              <img className="d-block w-100" src={library3} alt="Third slide" />
             </div>
           </div>
           <a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -79,7 +88,14 @@ class Home extends Component {
               />
             </div>
             <div className="fine-container">
-              Fine section
+              <h3>Your Outstanding Fines</h3>
+              {this.state.fines.map((fine) => (
+                <div key={fine._id}>
+                  <button type="button" className="list-group-item list-group-item-action">
+                    {fine.title} || {fine.amount}
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
