@@ -225,6 +225,33 @@ router.get('/get-user-resources', function(req, res, next){
 
 });
 
+router.get('/get-user-fines', function(req,res,next) {
+  
+  var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
+  var localUser;
+  
+  MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
+    
+    assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
+    
+    const db = client.db(dbName);
+    
+    db.collection('User').findOne({ 
+      email: req.session.user.email
+    },
+    function(err, result) {
+      if (err) throw err;
+      localUser = result;
+      resultArray = localUser.fines;
+
+      res.json(resultArray);
+      //console.log(resultArray);
+      client.close();
+    });
+
+  });
+})
+
 
 
 /* End Database Related Functions */

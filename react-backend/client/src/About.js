@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import help from "./Assets/help.svg";
+import notification from "./Assets/notification.svg";
 
 export default class About extends Component {
   render() {
@@ -85,7 +86,7 @@ export default class About extends Component {
 
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-outline-primary"
             data-toggle="modal"
             data-target="#exampleModalCenter"
           >
