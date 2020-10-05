@@ -9,9 +9,27 @@
   margin-bottom: 30px;
 }
 
+.search-group{
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
 .insert-form{
   margin-left: 10%;
   margin-right: 10%;
+}
+
+.btn-admin {
+  min-width: 300px;
+  font-size: 15px;
+  text-align: start;
+  width: 100%;
+}
+
+.btn-admin:hover {
+  background-color: rgb(199, 199, 199);
 }
 
 .form-labels{
@@ -26,25 +44,24 @@
 
 .searchbar {
   margin-top: 20px;
-  margin-left: 30%;
-  margin-right: 30%;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .admin-control{
-  display: flex;
-  justify-content: center;
-  margin-left: 10%;
-  margin-right: 10%;
+  margin-bottom: 10%;
+  margin-right: 10px;
 }
 
 .button-container {
-  padding-left: 10px;
   padding-right: 10px;
+  padding-bottom: 10px;
 }
 
 .home{
-  margin-left: 15%;
-  margin-right: 15%;
+  margin-left: 1%;
+  margin-right: 1%;
+  min-width: 80%;
 
 }
 
@@ -54,7 +71,34 @@
   border-width: 2px;
   margin-left: 10%;
   margin-right: 10%;
+  margin-bottom: 2%;
 }
+
+
+
+.user-view {
+  margin-left: 10px;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.source-container{
+  min-height: 60vh;
+  display: flex;
+  
+}
+
+.sidebar{
+  min-height:100%;
+  background-color: rgb(255, 255, 255);
+  max-width: 50px;
+  min-width: 15%;
+  display: block;
+  box-shadow: 5px 5px 5px -2px #888;
+  
+}
+
+
 
 /*
 .footer {
@@ -63,4 +107,6 @@
   display: flex;
   color: rgb(255, 255, 255);
 }
+
+box-shadow: 5px 0 5px -2px #888;
 */

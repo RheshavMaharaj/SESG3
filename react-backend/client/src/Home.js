@@ -5,6 +5,8 @@ import formula2 from "./Assets/f2.png";
 import sunset from "./Assets/sunset.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Home.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 //Class and subsequent functions
 class Home extends Component {
@@ -52,27 +54,34 @@ class Home extends Component {
             <span className="sr-only">Next</span>
           </a>
         </div>
-        <div className="home">
-          <div className="searchbar">
-            <form class="form-inline d-flex justify-content-center md-form form-sm active-purple-2 mt-2" action="/search" method="post">
-              <input class="form-control form-control-sm mr-3 w-75" id="search" name="search" type="text" placeholder="Search" aria-label="Search"/>
-              <button class="btn btn-primary" type="submit">
-                Search
-              </button>
-            </form>
+
+        <div className="source-container">
+          <div className="sidebar">
+            <div className="searchbar">
+              <form class="input-group" action="/search" method="post">
+                <input class="form-control" id="search" name="search" type="text" placeholder="Search" aria-label="Search"/>
+                  <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">
+                      <FontAwesomeIcon icon={faSearch} />
+                    </button>
+                  </div>
+              </form>
+            </div>
+            <Search Results={this.state.results} />
+            <UserView type = {this.state.userType} />
           </div>
-          <Search Results={this.state.results} />
-          <div className="list-group">
-            <h3>Your Resources</h3>
-            <Loading 
-              loading = {this.state.loading}
-              books = {this.state.books}
-            />
+          <div className="home">           
+            <div className="list-group">
+              <h3>Your Resources</h3>
+              <Loading 
+                loading = {this.state.loading}
+                books = {this.state.books}
+              />
+            </div>
+            <div className="fine-container">
+              Fine section
+            </div>
           </div>
-          <div className="fine-container">
-            Fine section
-          </div>
-          <UserView type = {this.state.userType} />
         </div>
       </div>
       
@@ -85,7 +94,7 @@ function Search(props) {
 
   if(!(Results.length >= 1 && Results[0].title === "Your Search Results returned Nothing")) {
     return (
-      <div className="list-group">
+      <div className="search-group">
         <h3>Search Results</h3>
         {Results.map((result) => (
           <div key={result._id}>
@@ -103,7 +112,7 @@ function Search(props) {
   else {
     return (
       <div className="list-group text-center">
-        <h4>No Search Results</h4>
+
       </div>
     )
   }
@@ -156,62 +165,68 @@ function UserView(props){
 
 function Admin() {
   return (
-    <div className="admin-control">
-      <AddBook />
-      <RemoveBook />
-      <EditBook />
+    <div className="user-view">
+      <h3 className = "heading-admin" >Control Panel</h3>
+      <div className="admin-control">
+        <AddBook />
+        <RemoveBook />
+        <EditBook />
+      </div>
     </div>
   )
 }
 
 function Staff() {
   return(
-    <div className="admin-control">
-      <div className="button-container">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-          Book Request
-        </button>
-      </div>
-      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">
-                Submit a Book Request
-              </h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div>
-                <form action="/book-request" method="post" className="insert-form">
-                  <div class="form-group">
-                    <label for="Title">Resource Title</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" />
-                  </div>
-                  <div class="form-group">
-                    <label for="Description">Description</label>
-                    <input type="text" class="form-control" id="description" name="description" placeholder="Enter Resource Description" />
-                  </div>
-                  <div class="form-group">
-                    <label for="Author">Author</label>
-                    <input type="text" class="form-control" id="author" name="author" placeholder="Enter Resource Author(s)" />
-                  </div>
-                  <div class="form-group">
-                    <label for="Reference Number">Reference Number</label>
-                    <input type="number" class="form-control" id="refnumber" name="refnumber" placeholder="Enter Resource Reference Number" />
-                  </div>
-                  <button type="submit" class="btn btn-primary">
-                    Submit
-                  </button>
-                </form>
+    <div className="user-view">
+      <h3>Control Panel</h3>
+      <div className="admin-control">
+        <div className="button-container">
+          <button type="button" class="btn btn-admin" data-toggle="modal" data-target="#exampleModalCenter">
+            Book Request
+          </button>
+        </div>
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">
+                  Submit a Book Request
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                Close
-              </button>
+              <div class="modal-body">
+                <div>
+                  <form action="/book-request" method="post" className="insert-form" id="book-request-form">
+                    <div class="form-group">
+                      <label for="Title">Resource Title</label>
+                      <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" />
+                    </div>
+                    <div class="form-group">
+                      <label for="Description">Description</label>
+                      <input type="text" class="form-control" id="description" name="description" placeholder="Enter Resource Description" />
+                    </div>
+                    <div class="form-group">
+                      <label for="Author">Author</label>
+                      <input type="text" class="form-control" id="author" name="author" placeholder="Enter Resource Author(s)" />
+                    </div>
+                    <div class="form-group">
+                      <label for="Reference Number">Reference Number</label>
+                      <input type="number" class="form-control" id="refnumber" name="refnumber" placeholder="Enter Resource Reference Number" />
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Close
+                </button>
+                <button type="submit" class="btn btn-primary" form="book-request-form">
+                  Submit
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -295,21 +310,21 @@ function BorrowBook(props) {
               </h5>
             </div>
             <div className="modal-body">
-              <form action="/borrow" method="post">
+              <form action="/borrow" method="post" id="borrow-book-form">
                 <div>
                   <label>Title: </label><label>{BookTitle}</label><input type="hidden" id="title" name="title" value={BookTitle}/> <br/>
                   <label>Content: </label><label>{BookContent}</label><input type="hidden" id="content" name="content" value={BookContent} /><br/>
                   <label>Author: </label><label>{BookAuthor}</label><input type="hidden" id="author" name="author" value={BookAuthor}/> <br/>
                   <label>refnumber: </label><label>{BookRef}</label><input type="hidden" id="refnumber" name="refnumber" value={BookRef} /> <br/>
                 </div>
-                <button type="submit" class="btn btn-primary">
-                  Submit
-                </button>
               </form>
             </div>  
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
+              </button>
+              <button type="submit" class="btn btn-primary" form="borrow-book-form">
+                Submit
               </button>
             </div>
           </div>
@@ -323,7 +338,7 @@ function AddBook() {
   return (
     <div>
       <div className="button-container">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+        <button type="button" class="btn btn-admin" data-toggle="modal" data-target="#exampleModalCenter">
           Add a Resource
         </button>
       </div>
@@ -340,7 +355,7 @@ function AddBook() {
             </div>
             <div class="modal-body">
               <div>
-                <form action="/insert" method="post" className="insert-form">
+                <form action="/insert" method="post" className="insert-form" id="add-book-form">
                   <div class="form-group">
                     <label for="Title">Resource Title</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" />
@@ -357,15 +372,15 @@ function AddBook() {
                     <label for="Reference Number">Reference Number</label>
                     <input type="number" class="form-control" id="refnumber" name="refnumber" placeholder="Enter Resource Reference Number" />
                   </div>
-                  <button type="submit" class="btn btn-primary">
-                    Submit
-                  </button>
                 </form>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
+              </button>
+              <button type="submit" class="btn btn-primary" form="add-book-form">
+                Submit
               </button>
             </div>
           </div>
@@ -379,7 +394,7 @@ function RemoveBook() {
   return (
     <div>
       <div className="button-container">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterRemove">
+        <button type="button" class="btn btn-admin" data-toggle="modal" data-target="#exampleModalCenterRemove">
           Remove a Resource
         </button>
       </div>
@@ -396,20 +411,20 @@ function RemoveBook() {
             </div>
             <div class="modal-body">
               <div>
-                <form action="/remove" method="post" className="insert-form">
+                <form action="/remove" method="post" className="insert-form" id="remove-book-form">
                   <div class="form-group">
                     <label for="Title">Resource Title</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" />
                   </div>
-                  <button type="submit" class="btn btn-primary">
-                    Submit
-                  </button>
                 </form>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
+              </button>
+              <button type="submit" class="btn btn-primary" form="remove-book-form">
+                Submit
               </button>
             </div>
           </div>
@@ -423,7 +438,7 @@ function EditBook() {
   return (
     <div>
       <div className="button-container">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterEdit">
+        <button type="button" class="btn btn-admin" data-toggle="modal" data-target="#exampleModalCenterEdit">
           Edit a Resource
         </button>
       </div>
@@ -440,7 +455,7 @@ function EditBook() {
             </div>
             <div class="modal-body">
               <div>
-                <form action="/edit" method="post" className="insert-form">
+                <form action="/edit" method="post" className="insert-form" id="edit-form">
                   <div class="form-group">
                     <label for="Search">Search</label>
                     <input type="text" class="form-control" id="search" name="search" placeholder="Search for the book" />
@@ -461,15 +476,15 @@ function EditBook() {
                     <label>Reference Number</label>
                     <input type="text" class="form-control" id="refnumber" name="refnumber" placeholder="Enter a new reference number" />
                   </div>
-                  <button type="submit" class="btn btn-primary">
-                    Submit
-                  </button>
                 </form>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
+              </button>
+              <button type="submit" class="btn btn-primary" form="edit-form">
+                Submit
               </button>
             </div>
           </div>
