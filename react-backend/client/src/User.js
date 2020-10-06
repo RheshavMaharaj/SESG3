@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./User.css";
 
 import image1 from "./Assets/userplaceholder.png";
-import notification from "./Assets/notification.svg";
+//import notification from "./Assets/notification.svg";
 
 export default class User extends Component {
   state = { user: {}, books: []};

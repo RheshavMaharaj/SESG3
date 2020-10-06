@@ -1,12 +1,22 @@
 import React, { Component } from "react";
-
+import Toast from 'react-bootstrap/Toast'
 import help from "./Assets/help.svg";
-import notification from "./Assets/notification.svg";
+//import notification from "./Assets/notification.svg";
 
 export default class About extends Component {
   render() {
     return (
       <div>
+        <div aria-live="polite" aria-atomic="true" style={{ position: 'relative', minHeight: '100px' }}>
+          <Toast style={{ position: 'absolute', top: 10, right: 10, width: 250 }}>
+            <Toast.Header>
+              <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
+              <strong className="mr-auto">Bootstrap</strong>
+              <small>just now</small>
+            </Toast.Header>
+            <Toast.Body>This is a notification for you</Toast.Body>
+          </Toast>
+        </div>
         <h1 class="text-center">This is the user's about/help screen</h1>
         <div class="container" align="center">
           <h5> FAQs</h5>
@@ -209,3 +219,4 @@ export default class About extends Component {
     );
   }
 }
+

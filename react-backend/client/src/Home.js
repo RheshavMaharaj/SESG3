@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./Home.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+//import Toast from 'react-bootstrap/Toast'
 
 //Class and subsequent functions
 class Home extends Component {
@@ -44,64 +45,32 @@ class Home extends Component {
     console.log(this.state.results);
     return (
       <div>
-        <div
-          id="carouselExampleControls"
-          className="carousel slide"
-          data-ride="carousel"
-        >
+        <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
           <div className="carousel-inner">
             <div className="carousel-item active">
               <img className="d-block w-100" src={library1} alt="First slide" />
             </div>
             <div className="carousel-item">
-              <img
-                className="d-block w-100"
-                src={library2}
-                alt="Second slide"
-              />
+              <img className="d-block w-100" src={library2} alt="Second slide" />
             </div>
             <div className="carousel-item">
               <img className="d-block w-100" src={library3} alt="Third slide" />
             </div>
           </div>
-          <a
-            className="carousel-control-prev"
-            href="#carouselExampleControls"
-            role="button"
-            data-slide="prev"
-          >
-            <span
-              className="carousel-control-prev-icon"
-              aria-hidden="true"
-            ></span>
+          <a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
             <span className="sr-only">Previous</span>
           </a>
-          <a
-            className="carousel-control-next"
-            href="#carouselExampleControls"
-            role="button"
-            data-slide="next"
-          >
-            <span
-              className="carousel-control-next-icon"
-              aria-hidden="true"
-            ></span>
+          <a className="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+            <span className="carousel-control-next-icon" aria-hidden="true"></span>
             <span className="sr-only">Next</span>
           </a>
         </div>
-
-        <div className="source-container">
+        <div className="source-container">  
           <div className="sidebar">
             <div className="searchbar">
               <form class="input-group" action="/search" method="post">
-                <input
-                  class="form-control"
-                  id="search"
-                  name="search"
-                  type="text"
-                  placeholder="Search"
-                  aria-label="Search"
-                />
+                <input class="form-control" id="search" name="search" type="text" placeholder="Search" aria-label="Search" />
                 <div class="input-group-append">
                   <button class="btn btn-secondary" type="submit">
                     <FontAwesomeIcon icon={faSearch} />
@@ -121,10 +90,7 @@ class Home extends Component {
               <h3>Your Outstanding Fines</h3>
               {this.state.fines.map((fine) => (
                 <div key={fine._id}>
-                  <button
-                    type="button"
-                    className="list-group-item list-group-item-action"
-                  >
+                  <button type="button" className="list-group-item list-group-item-action">
                     {fine.title} || {fine.amount}
                   </button>
                 </div>
@@ -140,12 +106,7 @@ class Home extends Component {
 function Search(props) {
   var Results = props.Results;
 
-  if (
-    !(
-      Results.length >= 1 &&
-      Results[0].title === "Your Search Results returned Nothing"
-    )
-  ) {
+  if (!(Results.length >= 1 && Results[0].title === "Your Search Results returned Nothing")) {
     return (
       <div className="search-group">
         <h3>Search Results</h3>
@@ -223,102 +184,48 @@ function Staff() {
       <h3>Control Panel</h3>
       <div className="admin-control">
         <div className="button-container">
-          <button
-            type="button"
-            class="btn btn-admin"
-            data-toggle="modal"
-            data-target="#exampleModalCenter"
-          >
+          <button type="button" class="btn btn-admin" data-toggle="modal" data-target="#exampleModalCenter">
             Book Request
           </button>
         </div>
-        <div
-          class="modal fade"
-          id="exampleModalCenter"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="exampleModalCenterTitle"
-          aria-hidden="true"
-        >
+        <div class="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">
                   Submit a Book Request
                 </h5>
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
                 <div>
-                  <form
-                    action="/book-request"
-                    method="post"
-                    className="insert-form"
-                    id="book-request-form"
-                  >
+                  <form action="/book-request" method="post" className="insert-form"id="book-request-form">
                     <div class="form-group">
                       <label for="Title">Resource Title</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="title"
-                        name="title"
-                        placeholder="Enter title"
-                      />
+                      <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" />
                     </div>
                     <div class="form-group">
                       <label for="Description">Description</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="description"
-                        name="description"
-                        placeholder="Enter Resource Description"
-                      />
+                      <input type="text" class="form-control" id="description" name="description" placeholder="Enter Resource Description" />
                     </div>
                     <div class="form-group">
                       <label for="Author">Author</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="author"
-                        name="author"
-                        placeholder="Enter Resource Author(s)"
-                      />
+                      <input type="text" class="form-control" id="author" name="author" placeholder="Enter Resource Author(s)"/>
                     </div>
                     <div class="form-group">
                       <label for="Reference Number">Reference Number</label>
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="refnumber"
-                        name="refnumber"
-                        placeholder="Enter Resource Reference Number"
-                      />
+                      <input type="number" class="form-control" id="refnumber" name="refnumber" placeholder="Enter Resource Reference Number"/>
                     </div>
                   </form>
                 </div>
               </div>
               <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-dismiss="modal"
-                >
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
                   Close
                 </button>
-                <button
-                  type="submit"
-                  class="btn btn-primary"
-                  form="book-request-form"
-                >
+                <button type="submit" class="btn btn-primary" form="book-request-form">
                   Submit
                 </button>
               </div>
@@ -346,18 +253,11 @@ function BookDetails(props) {
 
   return (
     <div>
-      <button
-        type="button"
-        className="list-group-item list-group-item-action"
-        data-toggle="modal"
-        data-target={ModalTarget}
-      >
+      <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target={ModalTarget}>
         {BookTitle}
       </button>
-      <div
-        class="modal fade"
-        id={ModalTargetID}
-        tabindex="-1"
+      <div class="modal fade" id={ModalTargetID}
+        tabIndex="-1"
         role="dialog"
         aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true"
@@ -420,7 +320,7 @@ function BorrowBook(props) {
       <div
         class="modal fade"
         id="exampleModalCenterBorrow"
-        tabindex="-1"
+        tabIndex="-1"
         role="dialog"
         aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true"
@@ -513,7 +413,7 @@ function AddBook() {
       <div
         class="modal fade"
         id="exampleModalCenter"
-        tabindex="-1"
+        tabIndex="-1"
         role="dialog"
         aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true"
@@ -623,7 +523,7 @@ function RemoveBook() {
       <div
         class="modal fade"
         id="exampleModalCenterRemove"
-        tabindex="-1"
+        tabIndex="-1"
         role="dialog"
         aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true"
@@ -703,7 +603,7 @@ function EditBook() {
       <div
         class="modal fade"
         id="exampleModalCenterEdit"
-        tabindex="-1"
+        tabIndex="-1"
         role="dialog"
         aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true"
@@ -785,11 +685,7 @@ function EditBook() {
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
               </button>
               <button type="submit" class="btn btn-primary" form="edit-form">

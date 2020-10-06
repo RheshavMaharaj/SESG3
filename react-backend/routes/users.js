@@ -197,6 +197,7 @@ router.post('/borrow', function(req,res,next){
   res.redirect('/home');
 });
 
+//To Do
 router.get('/get-user-resources', function(req, res, next){
   
   var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
@@ -225,6 +226,8 @@ router.get('/get-user-resources', function(req, res, next){
 
 });
 
+
+//T
 router.get('/get-user-fines', function(req,res,next) {
   
   var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
