@@ -1,6 +1,8 @@
 .carouselExampleControls{
   box-shadow: 10px;
+  position: relative;
 }
+
 
 .list-group{
   margin-left: 10%;
@@ -45,6 +47,7 @@
   margin-top: 20px;
   margin-left: 10px;
   margin-right: 10px;
+  
 }
 
 .admin-control{
@@ -58,10 +61,10 @@
 }
 
 .home{
-  margin-left: 1%;
-  margin-right: 1%;
+  margin-left: 10%;
+  margin-right: 10%;
   min-width: 80%;
-
+  position: relative;
 }
 
 .fine-container {
@@ -71,25 +74,30 @@
   margin-bottom: 2%;
 }
 
-
-
 .user-view {
   margin-left: 10px;
   margin-top: 2%;
   margin-bottom: 2%;
 }
 
-.source-container{
-  min-height: 60vh;
+.main-container{
+  min-height:100vh;
   display: flex;
-  
+}
+.source-container{
+  min-height: 100vh;
+  position: relative;
+}
+.home-container {
+  display: block;
+  position: relative;
 }
 
 .sidebar{
   min-height:100%;
   background-color: rgb(255, 255, 255);
-  max-width: 50px;
-  min-width: 15%;
+  max-width: 300px;
+  min-width: 350px;
   display: block;
   box-shadow: 5px 5px 5px -2px #888;
   

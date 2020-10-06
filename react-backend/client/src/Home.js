@@ -6,8 +6,8 @@ import library3 from "./Assets/library-3.jpg";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Home.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-//import Toast from 'react-bootstrap/Toast'
+import { faSearch, faBell } from "@fortawesome/free-solid-svg-icons";
+import Toast from 'react-bootstrap/Toast'
 
 //Class and subsequent functions
 class Home extends Component {
@@ -19,6 +19,7 @@ class Home extends Component {
     borrow: "",
     fines: [],
     loading: true,
+    show: true
   };
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
@@ -41,58 +42,104 @@ class Home extends Component {
       .then((fines) => this.setState({ fines }));
   }
 
+  
+
   render() {
-    console.log(this.state.results);
     return (
-      <div>
-        <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img className="d-block w-100" src={library1} alt="First slide" />
-            </div>
-            <div className="carousel-item">
-              <img className="d-block w-100" src={library2} alt="Second slide" />
-            </div>
-            <div className="carousel-item">
-              <img className="d-block w-100" src={library3} alt="Third slide" />
-            </div>
+      <div className="main-container">
+
+        <div className="sidebar">
+          <div className="searchbar">
+            <h3>Search Here</h3>
+            <form class="input-group" action="/search" method="post">
+              <input class="form-control" id="search" name="search" type="text" placeholder="Search" aria-label="Search" />
+              <div class="input-group-append">
+                <button class="btn btn-secondary" type="submit">
+                  <FontAwesomeIcon icon={faSearch} />
+                </button>
+              </div>
+            </form>
           </div>
-          <a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span className="sr-only">Previous</span>
-          </a>
-          <a className="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-            <span className="sr-only">Next</span>
-          </a>
+          <Search Results={this.state.results} />
+          <UserView type={this.state.userType} />
         </div>
+
         <div className="source-container">  
-          <div className="sidebar">
-            <div className="searchbar">
-              <form class="input-group" action="/search" method="post">
-                <input class="form-control" id="search" name="search" type="text" placeholder="Search" aria-label="Search" />
-                <div class="input-group-append">
-                  <button class="btn btn-secondary" type="submit">
-                    <FontAwesomeIcon icon={faSearch} />
-                  </button>
+          <div style={{position: 'relative'}}>
+            <div style={{position: 'relative'}}>
+              <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
+                <div className="carousel-inner">
+                  <div className="carousel-item active">
+                    <img className="d-block w-100" src={library1} alt="First slide" />
+                  </div>
+                  <div className="carousel-item">
+                    <img className="d-block w-100" src={library2} alt="Second slide" />
+                  </div>
+                  <div className="carousel-item">
+                    <img className="d-block w-100" src={library3} alt="Third slide" />
+                  </div>
                 </div>
-              </form>
+                <a className="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                  <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span className="sr-only">Previous</span>
+                </a>
+                <a className="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                  <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span className="sr-only">Next</span>
+                </a>
+              </div>          
             </div>
-            <Search Results={this.state.results} />
-            <UserView type={this.state.userType} />
           </div>
-          <div className="home">
-            <div className="list-group">
-              <h3>Your Resources</h3>
-              <Loading loading={this.state.loading} books={this.state.books} />
+          
+          <div className="home-container">
+            <div className="home">
+              <div className="list-group">
+                <h3>Your Resources</h3>
+                <Loading loading={this.state.loading} books={this.state.books} />
+              </div>
+              <div className="fine-container">
+                <h3>Your Outstanding Fines</h3>
+                {this.state.fines.map((fine) => (
+                  <div key={fine._id}>
+                    <button type="button" className="list-group-item list-group-item-action">
+                      {fine.title} || {fine.amount}
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="fine-container">
-              <h3>Your Outstanding Fines</h3>
+            {/*
+            <div style={{ position: 'absolute', top: 10, right: 10, width: 250 }}>
+              <Toast onClose={() => this.setState({ show: false })} show={this.state.show}>
+                <Toast.Header>
+                  <FontAwesomeIcon icon={faBell} />
+                  <strong className="ml-2 mr-auto"> Bootstrap</strong>
+                  <small>just now</small>
+                </Toast.Header>
+                <Toast.Body>This is a notification for you</Toast.Body>
+              </Toast>
+              <Toast onClose={() => this.setState({ show: false })} show={this.state.show}>
+                <Toast.Header>
+                  <FontAwesomeIcon icon={faBell} />
+                  <strong className="ml-2 mr-auto">Bootstrap</strong>
+                  <small>2 seconds ago</small>
+                </Toast.Header>
+                <Toast.Body>Heads up, toasts will stack automatically</Toast.Body>
+              </Toast>
+            </div>
+            */}
+            <div style={{ position: 'absolute', top: 10, right: 10, width: 250 }}>
               {this.state.fines.map((fine) => (
                 <div key={fine._id}>
-                  <button type="button" className="list-group-item list-group-item-action">
-                    {fine.title} || {fine.amount}
-                  </button>
+                  <Toast onClose={() => this.setState({ show: false })} show={this.state.show}>
+                    <Toast.Header>
+                      <FontAwesomeIcon icon={faBell} />
+                      <strong className="ml-2 mr-auto">Notification</strong>
+                      <small>just now</small>
+                    </Toast.Header>
+                    <Toast.Body>{fine.title}</Toast.Body>
+                  </Toast>
+                  <p></p>
                 </div>
               ))}
             </div>
@@ -173,6 +220,7 @@ function Admin() {
         <AddBook />
         <RemoveBook />
         <EditBook />
+        <ApproveRequest />
       </div>
     </div>
   );
@@ -699,6 +747,45 @@ function EditBook() {
   );
 }
 
+function ApproveRequest() {
+  return (
+    <div>
+      <div className="button-container">
+        <button type="button" class="btn btn-admin" data-toggle="modal" data-target="#exampleModalCenterApprove">
+          View Requests
+        </button>
+      </div>
+      <div class="modal fade" id="exampleModalCenterApprove" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">
+                Edit a Resource
+              </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                Close
+              </button>
+              <button type="submit" class="btn btn-primary" form="edit-form">
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default Home;
 
 /*
@@ -707,3 +794,4 @@ export default Home;
   <a href="/get-data">Load Data</a>
 </div>
 */
+
