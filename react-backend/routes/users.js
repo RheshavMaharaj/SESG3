@@ -216,7 +216,26 @@ router.post('/borrow', function(req,res,next){
     if (err) throw err;
     const db = client.db(dbName);
     var myquery = { email: req.session.user.email };
-    var newvalues = { $push: { books: { refnumber: req.body.refnumber } } };
+    var newvalues = { $push: { books: req.body.refnumber } };
+    db.collection('User').updateOne(myquery, newvalues, function(err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      client.close();
+    });
+  }); 
+  res.redirect('/home');
+});
+
+router.post('/return-book', function(req,res,next){
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+    const db = client.db(dbName);
+    var myquery = { email: req.session.user.email };
+    
+    //console.log('Ref Number of Document being Removed: ' + req.body.refnumber);
+
+    var newvalues = { $pull: { books: req.body.refnumber  } };
+    
     db.collection('User').updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
       console.log("1 document updated");

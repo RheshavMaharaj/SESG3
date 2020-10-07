@@ -24,30 +24,27 @@ class Home extends Component {
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
-    fetch("/get-requests")
+    fetch("/get-requests") //
       .then((res) => res.json())
       .then((test) => this.setState({ test }));
-    fetch("/get-user-type")
+    fetch("/get-user-type") //
       .then((res) => res.json())
       .then((userType) => this.setState({ userType }));
-    fetch("/search-results")
+    fetch("/search-results") //
       .then((res) => res.json())
       .then((results) => this.setState({ results }));
-    fetch("/get-user-resources")
+    fetch("/get-user-resources") //
       .then((res) => res.json())
       .then((books) => this.setState({ books }))
       .then((loading) => this.setState({ loading: false }));
-    fetch("/get-user-fines")
+    fetch("/get-user-fines") //
       .then((res) => res.json())
       .then((fines) => this.setState({ fines }));
   }
 
-  
-
   render() {
     return (
       <div className="main-container">
-
         <div className="sidebar">
           <div className="searchbar">
             <h3>Search Here</h3>
@@ -307,24 +304,14 @@ function BookDetails(props) {
       <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target={ModalTarget}>
         {BookTitle}
       </button>
-      <div class="modal fade" id={ModalTargetID}
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id={ModalTargetID} tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Book Details
               </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -333,15 +320,20 @@ function BookDetails(props) {
                 <label>Title: {BookTitle} </label> <br />
                 <label>Description: {BookContent} </label> <br />
                 <label>Author: {BookAuthor} </label> <br />
+                <label>Book Reference: {BookRef} </label> <br />
+                <form action="/return-book" method="post" id={"return-book"+BookRef}>
+                  <div>
+                    <input type="hidden" id="refnumber" name="refnumber" value={BookRef} />{" "}
+                  </div>
+                </form>
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
+              </button>
+              <button type="submit" class="btn btn-primary" form={"return-book"+BookRef}>
+                Return Book
               </button>
             </div>
           </div>
@@ -350,6 +342,7 @@ function BookDetails(props) {
     </div>
   );
 }
+
 
 function BorrowBook(props) {
   var BookContent = props.BookContent;
