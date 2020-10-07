@@ -11,6 +11,8 @@ const client = new MongoClient(url);
 
 const dbName = 'eLibrary';
 
+let date_ob = new Date();
+
 /* GET home page. */
 /*
 router.get('/users', function(req, res, next) {
@@ -212,11 +214,14 @@ router.get('/get-user-info', function(req,res,next) {
 });
 
 router.post('/borrow', function(req,res,next){
+  
+  var date = date_ob.getDate();
+
   MongoClient.connect(url, function(err, client) {
     if (err) throw err;
     const db = client.db(dbName);
     var myquery = { email: req.session.user.email };
-    var newvalues = { $push: { books: req.body.refnumber } };
+    var newvalues = { $push: { books: req.body.refnumber , fines: { resource: req.body.refnumber, borrowdate: date , limit: 5} } };
     db.collection('User').updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
       console.log("1 document updated");
@@ -291,7 +296,7 @@ router.get('/get-user-fines', function(req,res,next) {
   
   var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
   var localUser;
-  
+
   MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
     
     assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
@@ -306,11 +311,10 @@ router.get('/get-user-fines', function(req,res,next) {
       localUser = result;
       resultArray = localUser.fines;
 
-      res.json(resultArray);
-      //console.log(resultArray);
+      //res.json(resultArray);
+      console.log(resultArray);
       client.close();
     });
-
   });
 })
 
