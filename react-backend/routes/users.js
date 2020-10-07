@@ -79,13 +79,13 @@ router.post('/insert-user', function(req, res, next) {
         host: "smtp.gmail.com",
         port: 587,
         auth: {
-          user: 'ses1bg32020@gmail.com',
-          pass: 'HelloWorld'
+          user: /*Enter Email here for version control*/null,
+          pass: /*Enter Password here for version control*/ null
         }
       });
       
       var mailOptions = {
-        from: 'ses1bg32020@gmail.com',
+        from: /*copy email here for version control*/'',
         to: req.body.email,
         subject: 'Thank you For Signing Up to Our eLibrary Suite',
         html: '<h1>Welcome User</h1><p>You have been registered to the eLibrary Suite. You now have access to all the features the app offers. Enjoy!</p>'
