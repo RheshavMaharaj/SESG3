@@ -100,14 +100,13 @@ function Greeting(props) {
                   <Form.Group controlId="registerFormUserType">
                     <Form.Label>User Type</Form.Label>
                     <select id="user_type" name="user_type" class="form-control" required>
-                      <option value="1">Student</option>
-                      <option value="2">Staff</option>
+                      <option value="Student">Student</option>
+                      <option value="Staff">Staff</option>
                     </select>
                     <div class="invalid-feedback">
                       Please select a valid user type
                     </div>
                   </Form.Group>
-
                   <Form.Group controlId="registerFormCheckbox">
                     <Form.Check type="checkbox" label="Recaptcha" required />
                   </Form.Group>

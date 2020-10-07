@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
 /* Database Related Functions */
 
 //Database document retrieval. Retrieves all data from the specified collection 
-router.get('/get-data', function(req, res, next){
+router.get('/get-requests', function(req, res, next){
   
   var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
   
@@ -27,7 +27,7 @@ router.get('/get-data', function(req, res, next){
     
     const db = client.db(dbName);
     
-    var cursor = db.collection('Resources').find();
+    var cursor = db.collection('Requests').find();
     
     //Looping through the documents in the database to store into local array
     cursor.forEach(function(doc, err) {

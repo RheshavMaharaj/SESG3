@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var nodemailer = require('nodemailer'); 
 var assert = require('assert');
 var url = "mongmongodb+srv://Rheshav:SBgxypqdhUv859Q@sesg3.8gnmg.azure.mongodb.net/<dbname>?retryWrites=true&w=majority"; //Connection String
 var session = require('express-session');
@@ -45,7 +46,9 @@ router.get('/get-users', function(req, res, next){
 
 });
 
-
+router.post('/send-email', function(req, res, next) {
+  
+});
 
 //Database insert function via router. Allows data updates on page loads
 router.post('/insert-user', function(req, res, next) {
@@ -56,7 +59,7 @@ router.post('/insert-user', function(req, res, next) {
     iden_number: req.body.iden_number,
     contact_number: req.body.contact_number,
     user_type: req.body.user_type,
-    books:[ { title: 'Welcome', content: "This is your guide to using this website", author: 'J Jonah Jameson', refnumber: 1234567 } ],
+    books:[ 12345 ],
     faculty: req.body.faculty,
     email: req.body.email,
     password: req.body.password
@@ -71,7 +74,33 @@ router.post('/insert-user', function(req, res, next) {
     db.collection('User').insertOne(item, function(err, result){
       assert.equal(null, err);
       console.log('Item inserted'); //logs on console on successful insertion
+
+      var transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        auth: {
+          user: 'ses1bg32020@gmail.com',
+          pass: 'HelloWorld'
+        }
+      });
+      
+      var mailOptions = {
+        from: 'ses1bg32020@gmail.com',
+        to: req.body.email,
+        subject: 'Thank you For Signing Up to Our eLibrary Suite',
+        html: '<h1>Welcome User</h1><p>You have been registered to the eLibrary Suite. You now have access to all the features the app offers. Enjoy!</p>'
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      }); 
+
       client.close(); //closing database
+
     });
 
   });
@@ -187,7 +216,7 @@ router.post('/borrow', function(req,res,next){
     if (err) throw err;
     const db = client.db(dbName);
     var myquery = { email: req.session.user.email };
-    var newvalues = { $push: { books: { title: req.body.title, content: req.body.content, author: req.body.author, refnumber: req.body.refnumber } } };
+    var newvalues = { $push: { books: { refnumber: req.body.refnumber } } };
     db.collection('User').updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
       console.log("1 document updated");
@@ -202,6 +231,8 @@ router.get('/get-user-resources', function(req, res, next){
   
   var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
   var localUser;
+
+  var resources = [];
   
   MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
     
@@ -216,10 +247,19 @@ router.get('/get-user-resources', function(req, res, next){
       if (err) throw err;
       localUser = result;
       resultArray = localUser.books;
-
-      res.json(resultArray);
       //console.log(resultArray);
-      client.close();
+
+      var cursor = db.collection('Resources').find({ refnumber: { $in : resultArray } });
+
+      cursor.forEach(function(doc, err) {
+        assert.equal(null, err);
+        resources.push(doc); //storing to local array
+      }, function(){
+        client.close(); //closing database
+        res.json(resources);
+        //console.log(resources);
+      });
+
     });
 
   });
@@ -227,7 +267,7 @@ router.get('/get-user-resources', function(req, res, next){
 });
 
 
-//T
+//
 router.get('/get-user-fines', function(req,res,next) {
   
   var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js

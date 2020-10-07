@@ -13,7 +13,7 @@ import Toast from 'react-bootstrap/Toast'
 class Home extends Component {
   state = {
     books: [],
-    test: "",
+    test: [],
     results: [],
     userType: "Student",
     borrow: "",
@@ -24,7 +24,7 @@ class Home extends Component {
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
-    fetch("/test")
+    fetch("/get-requests")
       .then((res) => res.json())
       .then((test) => this.setState({ test }));
     fetch("/get-user-type")
@@ -61,7 +61,7 @@ class Home extends Component {
             </form>
           </div>
           <Search Results={this.state.results} />
-          <UserView type={this.state.userType} />
+          <UserView type={this.state.userType} requests={this.state.test}/>
         </div>
 
         <div className="source-container">  
@@ -202,17 +202,20 @@ function Loading(props) {
 
 function UserView(props) {
   var type = props.type;
+  var requests = props.requests;
 
   if (type === "Student") {
     return <Student />;
   } else if (type === "Admin") {
-    return <Admin />;
+    return <Admin ReRequests={requests}/>;
   } else if (type === "Staff") {
     return <Staff />;
   }
 }
 
-function Admin() {
+function Admin(props) {
+
+  var ReRequests = props.ReRequests;
   return (
     <div className="user-view">
       <h3 className="heading-admin">Control Panel</h3>
@@ -220,7 +223,7 @@ function Admin() {
         <AddBook />
         <RemoveBook />
         <EditBook />
-        <ApproveRequest />
+        <ApproveRequest Resources={ReRequests}/>
       </div>
     </div>
   );
@@ -747,7 +750,10 @@ function EditBook() {
   );
 }
 
-function ApproveRequest() {
+function ApproveRequest(props) {
+
+  var Resources = props.Resources;
+
   return (
     <div>
       <div className="button-container">
@@ -760,7 +766,7 @@ function ApproveRequest() {
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
-                Edit a Resource
+                Pending Requests
               </h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -768,15 +774,18 @@ function ApproveRequest() {
             </div>
             <div class="modal-body">
               <div>
-                
+                {Resources.map((request) => (
+                  <div key={request._id}>
+                    <button type="button" className="list-group-item list-group-item-action">
+                      {request.title}
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
-              </button>
-              <button type="submit" class="btn btn-primary" form="edit-form">
-                Submit
               </button>
             </div>
           </div>
