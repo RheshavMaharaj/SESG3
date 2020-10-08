@@ -302,7 +302,7 @@ router.get('/get-user-fines', async function(req,res,next) {
 
         if(diffDays > resultArray[i].limit) {
           
-          console.log(diffDays + ' ' + resultArray[i].limit);
+          //console.log(diffDays + ' ' + resultArray[i].limit);
           resources.push(resultArray[i].resource);
           block = true;
 
