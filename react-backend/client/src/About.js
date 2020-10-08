@@ -232,7 +232,14 @@ export default class About extends Component {
             <div class="jumbotron">
               <div class="container">
                 <h1 class="display-2">About us</h1>
-                <p>yeah we hate typing</p>
+                <p>
+                  We are a startup aimed at providing the best website
+                  expereince in the world, This webite was built using React,
+                  bootstrap, MongoDB and with the collaboration of the brighest
+                  minds in UTS. We hope you enjoy using our product and leave us
+                  any queries/bugs etc. in the query box above. It will help us
+                  improve our website. Thank you!
+                </p>
               </div>
             </div>
 
@@ -240,12 +247,23 @@ export default class About extends Component {
               <div class="row">
                 <div class="col-md-4">
                   <h2>Ways to reach us</h2>
-                  <p>please dont</p>
+                  <p>
+                    A user can leave queries with admin which will help the
+                    issue reach us ASAP. at the same time you can email us at -:
+                    Librarydesigners@uts.com
+                  </p>
                 </div>
 
                 <div class="col-md-8">
                   <h2>Our motivation</h2>
-                  <p>none left</p>
+                  <p>
+                    We aim at providing the best user expereince with highly
+                    responsive and quick system, We want to become the best at
+                    whatever we do and are always looking for practical
+                    solutions to help improving the world we live in. this
+                    website is just one step to help us learn and reach closer
+                    to our goal. Thank you for Supporting us!
+                  </p>
                 </div>
               </div>
             </div>
