@@ -11,6 +11,10 @@ const client = new MongoClient(url);
 
 const dbName = 'eLibrary';
 
+let date_ob = new Date();
+
+var block = false; //Tracking if user can borrow book or not
+
 /* GET home page. */
 /*
 router.get('/users', function(req, res, next) {
@@ -212,11 +216,20 @@ router.get('/get-user-info', function(req,res,next) {
 });
 
 router.post('/borrow', function(req,res,next){
+  
+  
+
+  var dd = String(date_ob.getDate()).padStart(2, '0');
+  var mm = String(date_ob.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = date_ob.getFullYear();
+
+  var date = mm + '/' + dd + '/' + yyyy;
+
   MongoClient.connect(url, function(err, client) {
     if (err) throw err;
     const db = client.db(dbName);
     var myquery = { email: req.session.user.email };
-    var newvalues = { $push: { books: { refnumber: req.body.refnumber } } };
+    var newvalues = { $push: { books: req.body.refnumber , fines: { resource: req.body.refnumber, borrowdate: date , limit: 5} } };
     db.collection('User').updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
       console.log("1 document updated");
@@ -224,6 +237,100 @@ router.post('/borrow', function(req,res,next){
     });
   }); 
   res.redirect('/home');
+});
+
+router.post('/return-book', function(req,res,next){
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+    const db = client.db(dbName);
+    var myquery = { email: req.session.user.email };
+    
+    //console.log('Ref Number of Document being Removed: ' + req.body.refnumber);
+
+    var newvalues = { $pull: { books: req.body.refnumber  } };
+    
+    db.collection('User').updateOne(myquery, newvalues, function(err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      client.close();
+    });
+  }); 
+  res.redirect('/home');
+});
+
+router.get('/get-user-fines', async function(req,res,next) {
+  
+  var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
+  var localUser;
+
+  var resources = [];
+
+  var userFine = [];
+  
+  var dd = String(date_ob.getDate()).padStart(2, '0');
+  var mm = String(date_ob.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = date_ob.getFullYear();
+
+  var currDate = yyyy + '-' + mm + '-' + dd;
+  
+  var current = new Date(currDate);
+
+  MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
+
+    assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
+    
+    const db = client.db(dbName);
+    
+    db.collection('User').findOne({ 
+      email: req.session.user.email
+    },
+    async function(err, result) {
+      
+      if (err) throw err;
+      localUser = result;
+      resultArray = localUser.fines;
+
+      
+      for(var i = 0; i<resultArray.length; i++){
+
+        var resDate = new Date(resultArray[i].borrowdate);
+        //console.log(resDate);
+
+        var diffTime = current - resDate;
+
+        var diffDays = diffTime / (1000 * 3600 * 24); 
+
+        if(diffDays > resultArray[i].limit) {
+          
+          console.log(diffDays + ' ' + resultArray[i].limit);
+          resources.push(resultArray[i].resource);
+          block = true;
+
+        }
+      }
+
+      
+      var cursor = await db.collection('Resources').find({ refnumber: { $in : resources } });
+
+      cursor.forEach(function(doc, err) {
+
+        assert.equal(null, err);
+        userFine.push(doc); //storing to local array
+
+      }, function(){
+
+        client.close(); //closing database
+        res.json(userFine);
+
+      });
+    
+    });
+      
+  });
+  
+  //Minus current date from recorded date
+  //if the date is less then add fine
+  //if the date is more skip
 });
 
 //To Do
@@ -266,13 +373,20 @@ router.get('/get-user-resources', function(req, res, next){
 
 });
 
+router.get('/get-fine-status', async function(req,res,next) {
+  res.json(block);
+})
 
-//
-router.get('/get-user-fines', function(req,res,next) {
+/*
+router.get('/get-user-fines', async function(req,res,next) {
   
   var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
   var localUser;
-  
+
+  var resources = [];
+
+  var userFine = [];
+
   MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
     
     assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
@@ -282,19 +396,35 @@ router.get('/get-user-fines', function(req,res,next) {
     db.collection('User').findOne({ 
       email: req.session.user.email
     },
-    function(err, result) {
+    async function(err, result) {
+      
       if (err) throw err;
       localUser = result;
       resultArray = localUser.fines;
 
-      res.json(resultArray);
-      //console.log(resultArray);
-      client.close();
-    });
+      
+      for(var i = 0; i<resultArray.length; i++){
+        if(resultArray[i].limit == 0) {
+          
+          resources.push(resultArray[i].resource);
+          block = true;
 
+        }
+      }
+
+      var cursor = await db.collection('Resources').find({ refnumber: { $in : resources } });
+
+      cursor.forEach(function(doc, err) {
+        assert.equal(null, err);
+        userFine.push(doc); //storing to local array
+      }, function(){
+        client.close(); //closing database
+        res.json(userFine);
+      });
+    });
   });
 })
-
+*/
 
 
 /* End Database Related Functions */

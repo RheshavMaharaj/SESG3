@@ -19,35 +19,36 @@ class Home extends Component {
     borrow: "",
     fines: [],
     loading: true,
-    show: true
+    show: true,
+    block: false
   };
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
-    fetch("/get-requests")
+    fetch("/get-fine-status") //
+      .then((res) => res.json())
+      .then((block) => this.setState({ block }));
+    fetch("/get-requests") //
       .then((res) => res.json())
       .then((test) => this.setState({ test }));
-    fetch("/get-user-type")
+    fetch("/get-user-type") //
       .then((res) => res.json())
       .then((userType) => this.setState({ userType }));
-    fetch("/search-results")
+    fetch("/search-results") //
       .then((res) => res.json())
       .then((results) => this.setState({ results }));
-    fetch("/get-user-resources")
+    fetch("/get-user-resources") //
       .then((res) => res.json())
       .then((books) => this.setState({ books }))
       .then((loading) => this.setState({ loading: false }));
-    fetch("/get-user-fines")
+    fetch("/get-user-fines") //
       .then((res) => res.json())
       .then((fines) => this.setState({ fines }));
   }
 
-  
-
   render() {
     return (
       <div className="main-container">
-
         <div className="sidebar">
           <div className="searchbar">
             <h3>Search Here</h3>
@@ -60,7 +61,7 @@ class Home extends Component {
               </div>
             </form>
           </div>
-          <Search Results={this.state.results} />
+          <Search Results={this.state.results} StatBlock={this.state.block} />
           <UserView type={this.state.userType} requests={this.state.test}/>
         </div>
 
@@ -97,16 +98,18 @@ class Home extends Component {
                 <h3>Your Resources</h3>
                 <Loading loading={this.state.loading} books={this.state.books} />
               </div>
+              
               <div className="fine-container">
                 <h3>Your Outstanding Fines</h3>
                 {this.state.fines.map((fine) => (
                   <div key={fine._id}>
                     <button type="button" className="list-group-item list-group-item-action">
-                      {fine.title} || {fine.amount}
+                      {fine.title}
                     </button>
                   </div>
                 ))}
               </div>
+
             </div>
             {/*
             <div style={{ position: 'absolute', top: 10, right: 10, width: 250 }}>
@@ -137,7 +140,7 @@ class Home extends Component {
                       <strong className="ml-2 mr-auto">Notification</strong>
                       <small>just now</small>
                     </Toast.Header>
-                    <Toast.Body>{fine.title}</Toast.Body>
+                    <Toast.Body>You have incurred a fine for {fine.title}</Toast.Body>
                   </Toast>
                   <p></p>
                 </div>
@@ -152,6 +155,7 @@ class Home extends Component {
 
 function Search(props) {
   var Results = props.Results;
+  var StatBlock = props.StatBlock;
 
   if (!(Results.length >= 1 && Results[0].title === "Your Search Results returned Nothing")) {
     return (
@@ -164,6 +168,7 @@ function Search(props) {
               BookContent={result.content}
               BookAuthor={result.author}
               BookRef={result.refnumber}
+              Block={StatBlock}
             />
           </div>
         ))}
@@ -307,24 +312,14 @@ function BookDetails(props) {
       <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target={ModalTarget}>
         {BookTitle}
       </button>
-      <div class="modal fade" id={ModalTargetID}
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id={ModalTargetID} tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Book Details
               </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -333,15 +328,20 @@ function BookDetails(props) {
                 <label>Title: {BookTitle} </label> <br />
                 <label>Description: {BookContent} </label> <br />
                 <label>Author: {BookAuthor} </label> <br />
+                <label>Book Reference: {BookRef} </label> <br />
+                <form action="/return-book" method="post" id={"return-book"+BookRef}>
+                  <div>
+                    <input type="hidden" id="refnumber" name="refnumber" value={BookRef} />{" "}
+                  </div>
+                </form>
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
+              </button>
+              <button type="submit" class="btn btn-primary" form={"return-book"+BookRef}>
+                Return Book
               </button>
             </div>
           </div>
@@ -351,101 +351,94 @@ function BookDetails(props) {
   );
 }
 
+
 function BorrowBook(props) {
   var BookContent = props.BookContent;
   var BookAuthor = props.BookAuthor;
-
+  var Block = props.Block;
   var BookRef = props.BookRef;
   var BookTitle = props.BookTitle;
 
-  return (
-    <div>
-      <button
-        type="button"
-        className="list-group-item list-group-item-action"
-        data-toggle="modal"
-        data-target="#exampleModalCenterBorrow"
-      >
-        {BookTitle}
-      </button>
-      <div
-        class="modal fade"
-        id="exampleModalCenterBorrow"
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">
-                Would you like to borrow this book?
-              </h5>
-            </div>
-            <div className="modal-body">
-              <form action="/borrow" method="post" id="borrow-book-form">
-                <div>
-                  <label>Title: </label>
-                  <label>{BookTitle}</label>
-                  <input
-                    type="hidden"
-                    id="title"
-                    name="title"
-                    value={BookTitle}
-                  />{" "}
-                  <br />
-                  <label>Content: </label>
-                  <label>{BookContent}</label>
-                  <input
-                    type="hidden"
-                    id="content"
-                    name="content"
-                    value={BookContent}
-                  />
-                  <br />
-                  <label>Author: </label>
-                  <label>{BookAuthor}</label>
-                  <input
-                    type="hidden"
-                    id="author"
-                    name="author"
-                    value={BookAuthor}
-                  />{" "}
-                  <br />
-                  <label>refnumber: </label>
-                  <label>{BookRef}</label>
-                  <input
-                    type="hidden"
-                    id="refnumber"
-                    name="refnumber"
-                    value={BookRef}
-                  />{" "}
-                  <br />
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
-                Close
-              </button>
-              <button
-                type="submit"
-                class="btn btn-primary"
-                form="borrow-book-form"
-              >
-                Submit
-              </button>
+  if(!Block){
+    return (
+      <div>
+        <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenterBorrow">
+          {BookTitle}
+        </button>
+        <div class="modal fade" id="exampleModalCenterBorrow" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">
+                  Would you like to borrow this book?
+                </h5>
+              </div>
+              <div className="modal-body">
+                <form action="/borrow" method="post" id="borrow-book-form">
+                  <div>
+                    <label>Title: </label>
+                    <label>{BookTitle}</label>
+                    <input type="hidden" id="title" name="title" value={BookTitle}/>{" "}
+                    <br />
+                    <label>Content: </label>
+                    <label>{BookContent}</label>
+                    <input type="hidden" id="content" name="content" value={BookContent}
+                    />
+                    <br />
+                    <label>Author: </label>
+                    <label>{BookAuthor}</label>
+                    <input type="hidden" id="author" name="author" value={BookAuthor}/>{" "}
+                    <br />
+                    <label>refnumber: </label>
+                    <label>{BookRef}</label>
+                    <input type="hidden" id="refnumber" name="refnumber" value={BookRef}/>{" "}
+                    <br />
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Close
+                </button>
+                <button type="submit" class="btn btn-primary" form="borrow-book-form">
+                  Submit
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+  else {
+    return(
+      <div>
+        <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenterFine">
+          {BookTitle}
+        </button>
+        <div class="modal fade" id="exampleModalCenterFine" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">
+                  Unfortunately, You have Outstanding Fines
+                </h5>
+              </div>
+              <div className="modal-body">
+                <p>You are not permitted to borrow any more books until you pay your outstanding fines. Please contact the Librarian.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
 }
 
 function AddBook() {
