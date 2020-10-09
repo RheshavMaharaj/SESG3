@@ -4,23 +4,18 @@ var nodemailer = require('nodemailer');
 var assert = require('assert');
 var url = "mongmongodb+srv://Rheshav:SBgxypqdhUv859Q@sesg3.8gnmg.azure.mongodb.net/<dbname>?retryWrites=true&w=majority"; //Connection String
 var session = require('express-session');
+const e = require('express');
 
 const MongoClient = require('mongodb').MongoClient;
 
-const client = new MongoClient(url);
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const dbName = 'eLibrary';
+const dbName = 'eLibrary'; //MongoDB specified Library Cluster
 
-let date_ob = new Date();
+let date_ob = new Date(); //Initialising Date objects for Fine Tracking
 
 var block = false; //Tracking if user can borrow book or not
 
-/* GET home page. */
-/*
-router.get('/users', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-*/
 
 /* Database Related Functions */
 
@@ -50,9 +45,7 @@ router.get('/get-users', function(req, res, next){
 
 });
 
-router.post('/send-email', function(req, res, next) {
-  
-});
+var signErrMsg = false;
 
 //Database insert function via router. Allows data updates on page loads
 router.post('/insert-user', function(req, res, next) {
@@ -69,48 +62,58 @@ router.post('/insert-user', function(req, res, next) {
     password: req.body.password
   }
 
+
+  
+
   MongoClient.connect(url, function(err, client){
     assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
 
     const db = client.db(dbName);
 
-    //Mongodb Insert function
-    db.collection('User').insertOne(item, function(err, result){
-      assert.equal(null, err);
-      console.log('Item inserted'); //logs on console on successful insertion
+    
+    //If statement to check if the email already exists
+    if(db.collection("User").countDocuments({ email: req.body.email }, limit=1) == 0){
+      db.collection('User').insertOne(item, function(err, result){
+        assert.equal(null, err);
+        console.log('Item inserted'); //logs on console on successful insertion
+  
+        var transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 587,
+          auth: {
+            user: /*Enter Email here for version control*/null,
+            pass: /*Enter Password here for version control*/ null
+          }
+        });
+        
+        var mailOptions = {
+          from: /*copy email here for version control*/'',
+          to: req.body.email,
+          subject: 'Thank you For Signing Up to Our eLibrary Suite',
+          html: '<h1>Welcome User</h1><p>You have been registered to the eLibrary Suite. You now have access to all the features the app offers. Enjoy!</p>'
+        };
+        
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        }); 
+  
+        client.close(); //closing database
 
-      var transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        auth: {
-          user: /*Enter Email here for version control*/null,
-          pass: /*Enter Password here for version control*/ null
-        }
+        req.session.user = item;
+        res.redirect('/home');
+  
       });
-      
-      var mailOptions = {
-        from: /*copy email here for version control*/'',
-        to: req.body.email,
-        subject: 'Thank you For Signing Up to Our eLibrary Suite',
-        html: '<h1>Welcome User</h1><p>You have been registered to the eLibrary Suite. You now have access to all the features the app offers. Enjoy!</p>'
-      };
-      
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      }); 
-
-      client.close(); //closing database
-
-    });
-
+    }
+    else{
+      signErrMsg = true;
+      res.redirect('/signup');
+    }
+    //Mongodb Insert function
   });
-
-  req.session.user = item;
-  res.redirect('/home');
 
 });
 
@@ -158,7 +161,7 @@ router.post('/handle-login', function(req,res,next) {
       else {
         if(user.email == req.body.email && user.password == req.body.password){
           req.session.user = user;
-          console.log(user.first_name + " " + user.email);
+          console.log("First Name: " + user.first_name + " " + "User Email: " + user.email);
           errMsg = false;
           res.redirect('/home');
         }
@@ -176,6 +179,10 @@ router.post('/handle-login', function(req,res,next) {
 
 router.get('/get-errMsg', function(req,res) {
   res.json(errMsg);
+});
+
+router.get('/get-signerrmsg', function(req,res) {
+  res.json(signErrMsg);
 });
 
 router.get('/login-status', function(req, res) {
@@ -217,19 +224,28 @@ router.get('/get-user-info', function(req,res,next) {
 
 router.post('/borrow', function(req,res,next){
   
-  
-
   var dd = String(date_ob.getDate()).padStart(2, '0');
   var mm = String(date_ob.getMonth() + 1).padStart(2, '0'); //January is 0!
   var yyyy = date_ob.getFullYear();
 
-  var date = mm + '/' + dd + '/' + yyyy;
+  var borrDate = yyyy + '-' + mm + '-' + dd;
+
+  var resDate = new Date(borrDate);
+  var update = resDate.setDate(resDate.getDate() + 14);
+  var nextDate = new Date(update);
+
+  var ddd = String(nextDate.getDate()).padStart(2, '0');
+  var dmm = String(nextDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var dyyyy = nextDate.getFullYear();
+
+  dDate = dyyyy + '-' + dmm + '-' + ddd;
 
   MongoClient.connect(url, function(err, client) {
     if (err) throw err;
     const db = client.db(dbName);
     var myquery = { email: req.session.user.email };
-    var newvalues = { $push: { books: req.body.refnumber , fines: { resource: req.body.refnumber, borrowdate: date , limit: 5} } };
+    var newvalues = { $push: { books: req.body.refnumber , fines: { resource: req.body.refnumber, borrowdate: borrDate , limit: 14, duedate: dDate} } };
+
     db.collection('User').updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
       console.log("1 document updated");
@@ -237,6 +253,36 @@ router.post('/borrow', function(req,res,next){
     });
   }); 
   res.redirect('/home');
+
+});
+
+var borrStat = false;
+router.get('/borrow-status', function(req, res, next){
+  MongoClient.connect(url, function(err, client) {
+    
+    if (err) throw err;
+    const db = client.db(dbName);
+
+    db.collection('User').findOne({ 
+      email: req.session.user.email
+    },
+    function(err, result) {
+      
+      if (err) throw err;
+      localUser = result;
+      resultArray = localUser.books;
+
+      if(resultArray.length >= 5){
+        borrStat = true;
+      }
+
+      client.close();
+      console.log(borrStat);
+      res.json(borrStat);
+
+    
+    });
+  });
 });
 
 router.post('/return-book', function(req,res,next){
@@ -275,6 +321,8 @@ router.get('/get-user-fines', async function(req,res,next) {
   
   var current = new Date(currDate);
 
+  //var nextDate = new Date( Date.now() + 14 * 24 * 60 * 60 * 1000);
+
   MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
 
     assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
@@ -294,22 +342,19 @@ router.get('/get-user-fines', async function(req,res,next) {
       for(var i = 0; i<resultArray.length; i++){
 
         var resDate = new Date(resultArray[i].borrowdate);
-        //console.log(resDate);
-
+        var update = resDate.setDate(resDate.getDate() + 14);
         var diffTime = current - resDate;
-
         var diffDays = diffTime / (1000 * 3600 * 24); 
 
         if(diffDays > resultArray[i].limit) {
           
-          //console.log(diffDays + ' ' + resultArray[i].limit);
+          console.log("Document Date: " + resDate);
           resources.push(resultArray[i].resource);
           block = true;
 
         }
       }
 
-      
       var cursor = await db.collection('Resources').find({ refnumber: { $in : resources } });
 
       cursor.forEach(function(doc, err) {
@@ -328,12 +373,76 @@ router.get('/get-user-fines', async function(req,res,next) {
       
   });
   
-  //Minus current date from recorded date
-  //if the date is less then add fine
-  //if the date is more skip
 });
 
+
+router.get('/get-resources', async function(req,res,next) {
+  
+  var dues = [];
+  var bookArray = []; //Used to store all the data into a local array to then be mapped in Home.js
+  var localUser;
+  var resources = [];
+    
+
+  MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
+
+    assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
+    
+    const db = client.db(dbName);
+    
+    db.collection('User').findOne({ 
+      email: req.session.user.email
+    },
+    async function(err, result) {
+      
+      if (err) throw err;
+      localUser = result;
+      dues = localUser.fines;
+      bookArray = localUser.books;
+
+      var cursor = db.collection('Resources').find({ refnumber: { $in : bookArray } });
+
+      cursor.forEach(function(doc, err) {
+        assert.equal(null, err);
+        resources.push(doc); //storing to local array
+      }, async function(){
+        for(var i=0; i<dues.length; i++){
+          for(var j=0; j<resources.length; j++){
+            if(dues[i].resource === resources[j].refnumber){
+              resources[j].dueDate = dues[i].duedate;
+            }
+          }
+        }
+        client.close(); //closing database
+        res.json(resources);
+      });
+
+    });
+
+  });
+
+});
+
+router.get('/get-fine-status', async function(req,res,next) {
+  res.json(block);
+})
+
+
+/* End Database Related Functions */
+
+module.exports = router;
+
+
+
+
+
+
+
+
+
+
 //To Do
+/*
 router.get('/get-user-resources', function(req, res, next){
   
   var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
@@ -372,61 +481,4 @@ router.get('/get-user-resources', function(req, res, next){
   });
 
 });
-
-router.get('/get-fine-status', async function(req,res,next) {
-  res.json(block);
-})
-
-/*
-router.get('/get-user-fines', async function(req,res,next) {
-  
-  var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
-  var localUser;
-
-  var resources = [];
-
-  var userFine = [];
-
-  MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
-    
-    assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
-    
-    const db = client.db(dbName);
-    
-    db.collection('User').findOne({ 
-      email: req.session.user.email
-    },
-    async function(err, result) {
-      
-      if (err) throw err;
-      localUser = result;
-      resultArray = localUser.fines;
-
-      
-      for(var i = 0; i<resultArray.length; i++){
-        if(resultArray[i].limit == 0) {
-          
-          resources.push(resultArray[i].resource);
-          block = true;
-
-        }
-      }
-
-      var cursor = await db.collection('Resources').find({ refnumber: { $in : resources } });
-
-      cursor.forEach(function(doc, err) {
-        assert.equal(null, err);
-        userFine.push(doc); //storing to local array
-      }, function(){
-        client.close(); //closing database
-        res.json(userFine);
-      });
-    });
-  });
-})
 */
-
-
-/* End Database Related Functions */
-
-module.exports = router;

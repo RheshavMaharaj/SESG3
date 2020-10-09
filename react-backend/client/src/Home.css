@@ -3,7 +3,6 @@
   position: relative;
 }
 
-
 .list-group{
   margin-left: 10%;
   margin-right: 10%;
@@ -84,10 +83,12 @@
   min-height:100vh;
   display: flex;
 }
+
 .source-container{
   min-height: 100vh;
   position: relative;
 }
+
 .home-container {
   display: block;
   position: relative;
@@ -103,15 +104,15 @@
   
 }
 
-
-
-/*
-.footer {
-  background-color: rgb(49, 49, 49);
-  height: 10%;
+.item {
   display: flex;
-  color: rgb(255, 255, 255);
+  justify-content: space-between;
 }
 
-box-shadow: 5px 0 5px -2px #888;
-*/
+.rem-message {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-bottom: 2%;
+  display: flex;
+  justify-content: space-around;
+}

@@ -20,14 +20,32 @@ class Home extends Component {
     fines: [],
     loading: true,
     show: true,
-    block: false
+    block: false,
+    dues: [],
+    remerror: false,
+    borrowStat: false
   };
+
+  constructor(props){
+    super(props);
+    this.setChanged = this.setChanged.bind(this);
+  }
+
+  setChanged() {
+    this.setState({ remerror: false });
+  }
 
   /* function to retrieve documents from mongodb database collection. Runs on every page reload */
   componentDidMount() {
     fetch("/get-fine-status") //
       .then((res) => res.json())
       .then((block) => this.setState({ block }));
+    fetch("/borrow-status") //
+      .then((res) => res.json())
+      .then((borrowStat) => this.setState({ borrowStat }));
+    fetch("/get-rem-err") //
+      .then((res) => res.json())
+      .then((remerror) => this.setState({ remerror }));
     fetch("/get-requests") //
       .then((res) => res.json())
       .then((test) => this.setState({ test }));
@@ -37,13 +55,13 @@ class Home extends Component {
     fetch("/search-results") //
       .then((res) => res.json())
       .then((results) => this.setState({ results }));
-    fetch("/get-user-resources") //
-      .then((res) => res.json())
-      .then((books) => this.setState({ books }))
-      .then((loading) => this.setState({ loading: false }));
     fetch("/get-user-fines") //
       .then((res) => res.json())
       .then((fines) => this.setState({ fines }));
+    fetch("/get-resources") //
+      .then((res) => res.json())
+      .then((books) => this.setState({ books }))
+      .then((loading) => this.setState({ loading: false }));
   }
 
   render() {
@@ -61,10 +79,9 @@ class Home extends Component {
               </div>
             </form>
           </div>
-          <Search Results={this.state.results} StatBlock={this.state.block} />
+          <Search Results={this.state.results} StatBlock={this.state.block} BorrowStatus={this.state.borrowStat} />
           <UserView type={this.state.userType} requests={this.state.test}/>
         </div>
-
         <div className="source-container">  
           <div style={{position: 'relative'}}>
             <div style={{position: 'relative'}}>
@@ -91,46 +108,17 @@ class Home extends Component {
               </div>          
             </div>
           </div>
-          
           <div className="home-container">
             <div className="home">
               <div className="list-group">
                 <h3>Your Resources</h3>
-                <Loading loading={this.state.loading} books={this.state.books} />
+                <LoadingBooks loading={this.state.loading} books={this.state.books} />
               </div>
-              
               <div className="fine-container">
                 <h3>Your Outstanding Fines</h3>
-                {this.state.fines.map((fine) => (
-                  <div key={fine._id}>
-                    <button type="button" className="list-group-item list-group-item-action">
-                      {fine.title}
-                    </button>
-                  </div>
-                ))}
+                <LoadingFines Fines={this.state.fines} loading={this.state.loading} />
               </div>
-
             </div>
-            {/*
-            <div style={{ position: 'absolute', top: 10, right: 10, width: 250 }}>
-              <Toast onClose={() => this.setState({ show: false })} show={this.state.show}>
-                <Toast.Header>
-                  <FontAwesomeIcon icon={faBell} />
-                  <strong className="ml-2 mr-auto"> Bootstrap</strong>
-                  <small>just now</small>
-                </Toast.Header>
-                <Toast.Body>This is a notification for you</Toast.Body>
-              </Toast>
-              <Toast onClose={() => this.setState({ show: false })} show={this.state.show}>
-                <Toast.Header>
-                  <FontAwesomeIcon icon={faBell} />
-                  <strong className="ml-2 mr-auto">Bootstrap</strong>
-                  <small>2 seconds ago</small>
-                </Toast.Header>
-                <Toast.Body>Heads up, toasts will stack automatically</Toast.Body>
-              </Toast>
-            </div>
-            */}
             <div style={{ position: 'absolute', top: 10, right: 10, width: 250 }}>
               {this.state.fines.map((fine) => (
                 <div key={fine._id}>
@@ -146,6 +134,9 @@ class Home extends Component {
                 </div>
               ))}
             </div>
+            <div className="rem-message">
+              <RemMessage err={this.state.remerror} setChanged={this.setChanged} />
+            </div>
           </div>
         </div>
       </div>
@@ -156,6 +147,7 @@ class Home extends Component {
 function Search(props) {
   var Results = props.Results;
   var StatBlock = props.StatBlock;
+  var BorrowStatus = props.BorrowStatus;
 
   if (!(Results.length >= 1 && Results[0].title === "Your Search Results returned Nothing")) {
     return (
@@ -169,6 +161,7 @@ function Search(props) {
               BookAuthor={result.author}
               BookRef={result.refnumber}
               Block={StatBlock}
+              BorrowStat={BorrowStatus}
             />
           </div>
         ))}
@@ -179,14 +172,14 @@ function Search(props) {
   }
 }
 
-function Loading(props) {
+function LoadingBooks(props) {
   var loading = props.loading;
   var books = props.books;
 
   if (loading) {
     return (
       <div class="d-flex justify-content-center m-5">
-        <div class="spinner-border text-primary" role="status">
+        <div class="spinner-grow text-primary" role="status">
           <span class="sr-only">Loading...</span>
         </div>
       </div>
@@ -199,9 +192,33 @@ function Loading(props) {
           BookContent={book.content}
           BookAuthor={book.author}
           BookRef={book.refnumber}
+          BookDue={book.dueDate}
         />
       </div>
     ));
+  }
+}
+
+function LoadingFines(props) {
+  var loading = props.loading;
+  var Fines = props.Fines;
+
+  if (loading) {
+    return (
+      <div class="d-flex justify-content-center m-5">
+        <div class="spinner-grow text-warning" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    );
+  } else if (!loading) {
+    return Fines.map((fine) => (
+      <div key={fine._id}>
+        <button type="button" className="list-group-item list-group-item-action">
+          {fine.title}
+        </button>
+      </div>
+    ))
   }
 }
 
@@ -300,7 +317,7 @@ function Student() {
 function BookDetails(props) {
   var BookContent = props.BookContent;
   var BookAuthor = props.BookAuthor;
-
+  var BookDue = props.BookDue;
   var BookRef = props.BookRef;
   var BookTitle = props.BookTitle;
 
@@ -310,7 +327,14 @@ function BookDetails(props) {
   return (
     <div>
       <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target={ModalTarget}>
-        {BookTitle}
+        <div className="item">
+          <div>
+            {BookTitle}
+          </div>
+          <div>
+            Due: {BookDue}
+          </div>
+        </div>
       </button>
       <div class="modal fade" id={ModalTargetID} tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -351,15 +375,25 @@ function BookDetails(props) {
   );
 }
 
-
 function BorrowBook(props) {
   var BookContent = props.BookContent;
   var BookAuthor = props.BookAuthor;
   var Block = props.Block;
   var BookRef = props.BookRef;
   var BookTitle = props.BookTitle;
+  var BorrowStat = props.BorrowStat;
 
-  if(!Block){
+  var status = "Allowed";
+
+  if(Block){
+    status = "Fine";
+  }
+  else if(BorrowStat){
+    status = "Limit";
+  }
+
+
+  if(status === "Allowed"){
     return (
       <div>
         <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenterBorrow">
@@ -410,7 +444,7 @@ function BorrowBook(props) {
       </div>
     );
   }
-  else {
+  else if(status === "Fine"){
     return(
       <div>
         <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenterFine">
@@ -425,7 +459,36 @@ function BorrowBook(props) {
                 </h5>
               </div>
               <div className="modal-body">
-                <p>You are not permitted to borrow any more books until you pay your outstanding fines. Please contact the Librarian.</p>
+                <p>You are not permitted to borrow any more resources until you pay your outstanding fines. Please contact the Librarian.</p>
+                <p>You Owe the Library $20.00 AUD</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  else if(status === "Limit") {
+    return(
+      <div>
+        <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenterFine">
+          {BookTitle}
+        </button>
+        <div class="modal fade" id="exampleModalCenterFine" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">
+                  Unfortunately, You Have Reached Your Borrow Limit
+                </h5>
+              </div>
+              <div className="modal-body">
+                <p>You are not permitted to borrow any more resources until have returned one or more of your currently borrowed resources.</p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">
@@ -445,102 +508,48 @@ function AddBook() {
   return (
     <div>
       <div className="button-container">
-        <button
-          type="button"
-          class="btn btn-admin"
-          data-toggle="modal"
-          data-target="#exampleModalCenter"
-        >
+        <button type="button" class="btn btn-admin" data-toggle="modal" data-target="#exampleModalCenter">
           Add a Resource
         </button>
       </div>
-      <div
-        class="modal fade"
-        id="exampleModalCenter"
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Add a new Resource
               </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
               <div>
-                <form
-                  action="/insert"
-                  method="post"
-                  className="insert-form"
-                  id="add-book-form"
-                >
+                <form action="/insert" method="post" className="insert-form" id="add-book-form">
                   <div class="form-group">
                     <label for="Title">Resource Title</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="title"
-                      name="title"
-                      placeholder="Enter title"
-                    />
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title"/>
                   </div>
                   <div class="form-group">
                     <label for="Description">Description</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="description"
-                      name="description"
-                      placeholder="Enter Resource Description"
-                    />
+                    <input type="text" class="form-control" id="description" name="description" placeholder="Enter Resource Description"/>
                   </div>
                   <div class="form-group">
                     <label for="Author">Author</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="author"
-                      name="author"
-                      placeholder="Enter Resource Author(s)"
-                    />
+                    <input type="text" class="form-control" id="author" name="author" placeholder="Enter Resource Author(s)"/>
                   </div>
                   <div class="form-group">
                     <label for="Reference Number">Reference Number</label>
-                    <input
-                      type="number"
-                      class="form-control"
-                      id="refnumber"
-                      name="refnumber"
-                      placeholder="Enter Resource Reference Number"
-                    />
+                    <input type="number" class="form-control" id="refnumber" name="refnumber" placeholder="Enter Resource Reference Number"/>
                   </div>
                 </form>
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
               </button>
-              <button
-                type="submit"
-                class="btn btn-primary"
-                form="add-book-form"
-              >
+              <button type="submit" class="btn btn-primary" form="add-book-form">
                 Submit
               </button>
             </div>
@@ -564,63 +573,32 @@ function RemoveBook() {
           Remove a Resource
         </button>
       </div>
-      <div
-        class="modal fade"
-        id="exampleModalCenterRemove"
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id="exampleModalCenterRemove" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Remove a Resource
               </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
               <div>
-                <form
-                  action="/remove"
-                  method="post"
-                  className="insert-form"
-                  id="remove-book-form"
-                >
+                <form action="/remove" method="post" className="insert-form" id="remove-book-form">
                   <div class="form-group">
-                    <label for="Title">Resource Title</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="title"
-                      name="title"
-                      placeholder="Enter title"
-                    />
+                    <label for="Title">Enter Resource Reference Number</label>
+                    <input type="text" class="form-control" id="refnumber" name="refnumber" placeholder="Enter title"/>
                   </div>
                 </form>
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
                 Close
               </button>
-              <button
-                type="submit"
-                class="btn btn-primary"
-                form="remove-book-form"
-              >
+              <button type="submit" class="btn btn-primary" form="remove-book-form">
                 Submit
               </button>
             </div>
@@ -631,99 +609,67 @@ function RemoveBook() {
   );
 }
 
+function RemMessage(props) {
+  
+  var err = props.err;
+ 
+  if(err) {
+    return (
+      <div>
+        <br />
+        <button onClick={() => props.setChanged()} class="alert alert-danger text-center m" role="alert">
+          Unable to delete. A user has currently borrowed the resource.
+        </button>
+      </div>
+    )
+  }
+  else {
+    return <div></div>
+  }
+
+}
+
 function EditBook() {
   return (
     <div>
       <div className="button-container">
-        <button
-          type="button"
-          class="btn btn-admin"
-          data-toggle="modal"
-          data-target="#exampleModalCenterEdit"
-        >
+        <button type="button" class="btn btn-admin" data-toggle="modal" data-target="#exampleModalCenterEdit">
           Edit a Resource
         </button>
       </div>
-      <div
-        class="modal fade"
-        id="exampleModalCenterEdit"
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id="exampleModalCenterEdit" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">
                 Edit a Resource
               </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
               <div>
-                <form
-                  action="/edit"
-                  method="post"
-                  className="insert-form"
-                  id="edit-form"
-                >
+                <form action="/edit" method="post" className="insert-form" id="edit-form">
                   <div class="form-group">
-                    <label for="Search">Search</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="search"
-                      name="search"
-                      placeholder="Search for the book"
-                    />
+                    <label for="Search">Enter the Title of the Resource</label>
+                    <input type="text" class="form-control" id="search" name="search" placeholder="Search for the book"/>
                   </div>
                   <div class="form-group">
                     <label>Title</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="title"
-                      name="title"
-                      placeholder="Enter new title"
-                    />
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter new title"/>
                   </div>
                   <div class="form-group">
                     <label>Book Description</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="content"
-                      name="content"
-                      placeholder="Enter new description"
-                    />
+                    <input type="text" class="form-control" id="content" name="content" placeholder="Enter new description"/>
                   </div>
                   <div class="form-group">
                     <label>Search</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="author"
-                      name="author"
-                      placeholder="Enter new Author"
-                    />
+                    <input type="text" class="form-control" id="author" name="author" placeholder="Enter new Author"/>
                   </div>
                   <div class="form-group">
                     <label>Reference Number</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="refnumber"
-                      name="refnumber"
-                      placeholder="Enter a new reference number"
-                    />
+                    <input type="text" class="form-control" id="refnumber" name="refnumber" placeholder="Enter a new reference number"/>
                   </div>
                 </form>
               </div>
@@ -789,11 +735,3 @@ function ApproveRequest(props) {
 }
 
 export default Home;
-
-/*
-//Get data link to force app to show new updates to the database on screen - use for light testing purposes only
-<div>
-  <a href="/get-data">Load Data</a>
-</div>
-*/
-

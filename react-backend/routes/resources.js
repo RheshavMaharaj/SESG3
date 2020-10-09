@@ -5,7 +5,7 @@ var url = "mongmongodb+srv://Rheshav:SBgxypqdhUv859Q@sesg3.8gnmg.azure.mongodb.n
 
 const MongoClient = require('mongodb').MongoClient;
 
-const client = new MongoClient(url);
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const dbName = 'eLibrary';
 
@@ -108,20 +108,39 @@ router.post('/insert', function(req, res, next) {
   res.redirect('/home');
 });
 
+var remErr = false;
+
 router.post('/remove', function(req, res, next) {
   
   MongoClient.connect(url, function(err, client) {
-    if (err) throw err;
+
     const db = client.db(dbName);
-    var myquery = { title: req.body.title };
-    db.collection('Resources').deleteOne(myquery, function(err, obj) {
+
+    if(db.collection('User').countDocuments({ books: req.body.refnumber }, limit=1) == 0){
+
       if (err) throw err;
-      console.log("1 document deleted");
-      client.close();
-    });
+      
+      var myquery = { refnumber: req.body.refnumber };
+      db.collection('Resources').deleteOne(myquery, function(err, obj) {
+        if (err) throw err;
+        console.log("1 document deleted");
+        client.close();
+      });
+      res.redirect('/home');
+    }
+    else {
+      console.log('User has borrowed this book. Unable to delete.');
+      remErr = true;
+      res.redirect('/home');
+    }
+
   }); 
-  res.redirect('/home');
-  
+
+});
+
+router.get('/get-rem-err', function(req,res) {
+  res.json(remErr);
+  remErr = false;
 });
 
 router.post('/edit', function(req, res, next) {

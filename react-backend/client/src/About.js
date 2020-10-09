@@ -1,7 +1,4 @@
 import React, { Component } from "react";
-
-import help from "./Assets/help.svg";
-
 import "./about.css";
 
 export default class About extends Component {
