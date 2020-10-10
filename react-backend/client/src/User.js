@@ -5,13 +5,20 @@ import image1 from "./Assets/userplaceholder.png";
 //import notification from "./Assets/notification.svg";
 
 export default class User extends Component {
-  state = { user: {}, books: [] };
+  
+  constructor() {
+    super();
+    this.state = {
+      user: {}, 
+      books: []
+    };
+  }
 
   componentDidMount() {
     fetch("/get-user-info")
       .then((res) => res.json())
       .then((user) => this.setState({ user }));
-    fetch("/get-user-resources")
+    fetch("/get-resources")
       .then((res) => res.json())
       .then((books) => this.setState({ books }));
   }
@@ -331,40 +338,38 @@ export default class User extends Component {
                         </button>
                       </div>
                       <div class="modal-body">
-                        <form
-                          class="was-validated"
-                          id="change-details"
-                          action="/edit-user"
-                          method="post"
-                        >
+                        <form class="was-validated" id="change-password" action="/edit-password" method="post">
+                          {/*}
                           <div class="form-row">
                             <div class="form-group col-md-6">
                               <label for="newPass" class="font-weight-bold">
                                 New Password
                               </label>
-
-                              <input
-                                type="password"
-                                class="form-control"
-                                id="newPass"
-                                name="newPass"
-                                placeholder="Enter new Password"
+                              <input 
+                                type="password" 
+                                name="password" 
+                                class="form-control" 
+                                placeholder="Enter password" 
+                                id="password"
+                                pattern=".{8,}"
                                 required
                               />
                             </div>
                           </div>
+                          */}
                           <div class="form-row">
                             <div class="form-group col-md-6">
-                              <label for="confirmPass" class="font-weight-bold">
-                                Confirm Password
+                              <label for="password" class="font-weight-bold">
+                                Enter New Password
                               </label>
-                              <input
-                                type="password"
-                                id="confirmPass"
-                                name="confirmPass"
-                                class="form-control"
-                                placeholder="Confirm Password"
-                                required
+                              <input 
+                                type="password" 
+                                name="confirm_password" 
+                                class="form-control" 
+                                placeholder="Enter your new password here" 
+                                id="confirm_password"
+                                pattern=".{8,}"
+                                required 
                               />
                             </div>
                           </div>
@@ -380,8 +385,8 @@ export default class User extends Component {
                         </button>
                         <button
                           type="submit"
-                          form="change-details"
                           class="btn btn-primary"
+                          form="change-password"
                         >
                           Save Changes
                         </button>

@@ -445,7 +445,26 @@ router.get('/get-resources', async function(req,res,next) {
 
 router.get('/get-fine-status', async function(req,res,next) {
   res.json(block);
-})
+});
+
+router.post('/edit-password', function(req,res,next){
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+    const db = client.db(dbName);
+    var myquery = { email: req.session.user.email };
+    let hash = bcrypt.hashSync(req.body.confirm_password, 10);
+    var newvalues = { $set: {
+        password: hash
+      }
+    }
+    db.collection('User').updateOne(myquery, newvalues, function(err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      client.close();
+    });
+  }); 
+  res.redirect('/user');
+});
 
 
 /* End Database Related Functions */
