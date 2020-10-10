@@ -15,6 +15,7 @@ import User from "./User.js";
 import Login from "./Login.js";
 import SplashScreen from "./SplashScreen";
 import SignUp from "./SignUp.js";
+import CategoryView from "./CategoryView.js";
 //import SearchResults from './SearchResults.js';
 
 //import notification from "./Assets/notification.svg";
@@ -59,6 +60,9 @@ class Navbar extends Component {
               <Route path="/user">
                 <User />
               </Route>
+              <Route path="/categoryview">
+                <CategoryView />
+              </Route>
               {/*}
               <Route path="/search-error">
                 <SearchResults />
@@ -92,12 +96,23 @@ function IsLoggedIn(props) {
       <Link to="/about">
         <img src={about} className="App-logo" alt="about" />
       </Link>
-      <img src={user} className="App-logo" alt="account" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" color="white"/>
+      <Link to="/categoryview">
+        <img src={follow} className="App-logo" alt="categoryview" />
+      </Link>
+      <img
+        src={user}
+        className="App-logo"
+        alt="account"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        color="white"
+      />
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <Link to="/user">
-          <button class="drop-button">
-            Account
-          </button>
+          <button class="drop-button">Account</button>
         </Link>
         <form action="/logout" method="post">
           <button type="submit" class="drop-button">

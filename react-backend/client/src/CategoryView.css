@@ -1,0 +1,35 @@
+.carouselExampleControls {
+  box-shadow: 10px;
+  position: relative;
+}
+
+.home {
+  margin-left: 10%;
+  margin-right: 10%;
+  min-width: 80%;
+  position: relative;
+}
+
+.main-container {
+  min-height: 100vh;
+  display: flex;
+}
+
+.source-container {
+  min-height: 100vh;
+  position: relative;
+}
+
+.home-container {
+  display: block;
+  position: relative;
+}
+
+.sidebar {
+  min-height: 100%;
+  background-color: rgb(255, 255, 255);
+  max-width: 300px;
+  min-width: 350px;
+  display: block;
+  box-shadow: 5px 5px 5px -2px #888;
+}
