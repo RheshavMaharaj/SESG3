@@ -5,16 +5,15 @@ var assert = require('assert');
 var url = "mongmongodb+srv://Rheshav:SBgxypqdhUv859Q@sesg3.8gnmg.azure.mongodb.net/<dbname>?retryWrites=true&w=majority"; //Connection String
 var session = require('express-session');
 const e = require('express');
+const bcrypt = require('bcrypt');
 
 const MongoClient = require('mongodb').MongoClient;
-
 const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
-
 const dbName = 'eLibrary'; //MongoDB specified Library Cluster
-
 let date_ob = new Date(); //Initialising Date objects for Fine Tracking
-
 var block = false; //Tracking if user can borrow book or not
+
+
 
 
 /* Database Related Functions */
@@ -49,70 +48,81 @@ var signErrMsg = false;
 
 //Database insert function via router. Allows data updates on page loads
 router.post('/insert-user', function(req, res, next) {
-
-  var item = {
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
-    iden_number: req.body.iden_number,
-    contact_number: req.body.contact_number,
-    user_type: req.body.user_type,
-    books:[ 12345 ],
-    faculty: req.body.faculty,
-    email: req.body.email,
-    password: req.body.password
-  }
-
-
   
+  //bcrypt goes here
+  bcrypt.hash(req.body.password, 10, function(err, hash) {
+    // Store hash in database
+    var item = {
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      iden_number: req.body.iden_number,
+      contact_number: req.body.contact_number,
+      user_type: req.body.user_type,
+      books:[ ],
+      fines: [ ],
+      faculty: req.body.faculty,
+      email: req.body.email,
+      password: hash
+    }
+  
+    MongoClient.connect(url, function(err, client){
+      assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
+  
+      const db = client.db(dbName);
+      var docCount;
+     
+      db.collection("User").countDocuments({ email: req.body.email }, limit=1)
+      .then(function(numItems) {
+        console.log(numItems); // Use this to debug
+        docCount = numItems;
 
-  MongoClient.connect(url, function(err, client){
-    assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
-
-    const db = client.db(dbName);
-
+        //If statement to check if the email already exists
+        if( docCount == 0 ){
+          //Mongodb Insert function
+          db.collection('User').insertOne(item, function(err, result){
+            assert.equal(null, err);
+            console.log('Item inserted'); //logs on console on successful insertion
+      
+            var transporter = nodemailer.createTransport({
+              host: "smtp.gmail.com",
+              port: 587,
+              auth: {
+                user: 'ses1bg32020@gmail.com',
+                pass: 'HelloWorld'
+              }
+            });
+            
+            var mailOptions = {
+              from: 'ses1bg32020@gmail.com',
+              to: req.body.email,
+              subject: 'Thank you For Signing Up to Our eLibrary Suite',
+              html: '<h1>Welcome User</h1><p>You have been registered to the eLibrary Suite. You now have access to all the features the app offers. Enjoy!</p>'
+            };
+            
+            transporter.sendMail(mailOptions, function(error, info){
+              if (error) {
+                console.log(error);
+              } else {
+                console.log('Email sent: ' + info.response);
+              }
+            }); 
+      
+            client.close(); //closing database
     
-    //If statement to check if the email already exists
-    if(db.collection("User").countDocuments({ email: req.body.email }, limit=1) == 0){
-      db.collection('User').insertOne(item, function(err, result){
-        assert.equal(null, err);
-        console.log('Item inserted'); //logs on console on successful insertion
-  
-        var transporter = nodemailer.createTransport({
-          host: "smtp.gmail.com",
-          port: 587,
-          auth: {
-            user: /*Enter Email here for version control*/null,
-            pass: /*Enter Password here for version control*/ null
-          }
-        });
-        
-        var mailOptions = {
-          from: /*copy email here for version control*/'',
-          to: req.body.email,
-          subject: 'Thank you For Signing Up to Our eLibrary Suite',
-          html: '<h1>Welcome User</h1><p>You have been registered to the eLibrary Suite. You now have access to all the features the app offers. Enjoy!</p>'
-        };
-        
-        transporter.sendMail(mailOptions, function(error, info){
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('Email sent: ' + info.response);
-          }
-        }); 
-  
-        client.close(); //closing database
+            req.session.user = item;
+            res.redirect('/home');
+      
+          });
+        }
+        else{
+          signErrMsg = true;
+          res.redirect('/signup');
+        }
 
-        req.session.user = item;
-        res.redirect('/home');
-  
-      });
-    }
-    else{
-      signErrMsg = true;
-      res.redirect('/signup');
-    }
-    //Mongodb Insert function
+      })
+    
+    });
+
   });
 
 });
@@ -144,6 +154,9 @@ router.post('/edit-user', function(req, res, next) {
 var errMsg = false;
 
 router.post('/handle-login', function(req,res,next) {
+
+  //Redesign for bcrypt
+
   var user;
 
   MongoClient.connect(url, function(err, client) {
@@ -159,16 +172,23 @@ router.post('/handle-login', function(req,res,next) {
         res.redirect('/login');
       } 
       else {
-        if(user.email == req.body.email && user.password == req.body.password){
-          req.session.user = user;
-          console.log("First Name: " + user.first_name + " " + "User Email: " + user.email);
-          errMsg = false;
-          res.redirect('/home');
-        }
-        else {
-          errMsg = true;
-          res.redirect('/login');
-        }
+        bcrypt.compare(req.body.password, user.password, function(err, response) {
+          if(response && user.email == req.body.email) {
+            // Passwords match
+            console.log("Matched");
+            req.session.user = user;
+            console.log("First Name: " + user.first_name + " " + "User Email: " + user.email);
+            errMsg = false;
+            res.redirect('/home');
+            
+          } else {
+            // Passwords don't match
+            errMsg = true;
+            res.redirect('/login');
+            console.log("Does not match");
+
+          } 
+        });
       }
       client.close();
     });
@@ -339,7 +359,7 @@ router.get('/get-user-fines', async function(req,res,next) {
       resultArray = localUser.fines;
 
       
-      for(var i = 0; i<resultArray.length; i++){
+      for(var i = 0; i<resultArray.length; i++){ //
 
         var resDate = new Date(resultArray[i].borrowdate);
         var update = resDate.setDate(resDate.getDate() + 14);
