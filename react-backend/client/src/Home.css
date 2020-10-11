@@ -1,5 +1,6 @@
 .carouselExampleControls{
   box-shadow: 10px;
+  position: relative;
 }
 
 .list-group{
@@ -9,9 +10,26 @@
   margin-bottom: 30px;
 }
 
+.search-group{
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
 .insert-form{
   margin-left: 10%;
   margin-right: 10%;
+}
+
+.btn-admin {
+  font-size: 15px;
+  text-align: start;
+  width: 100%;
+}
+
+.btn-admin:hover {
+  background-color: rgb(199, 199, 199);
 }
 
 .form-labels{
@@ -25,28 +43,76 @@
 }
 
 .searchbar {
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   
-  margin-left: 30%;
-  margin-right: 30%;
 }
 
 .admin-control{
-  display: flex;
-  justify-content: center;
-  margin-left: 10%;
-  margin-right: 10%;
+  margin-bottom: 10%;
+  margin-right: 10px;
 }
 
 .button-container {
-  padding-left: 10px;
   padding-right: 10px;
+  padding-bottom: 10px;
 }
 
-/*
-.footer {
-  background-color: rgb(49, 49, 49);
-  height: 10%;
-  display: flex;
-  color: rgb(255, 255, 255);
+.home{
+  margin-left: 10%;
+  margin-right: 10%;
+  min-width: 80%;
+  position: relative;
 }
-*/
+
+.fine-container {
+  min-height: 300px;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-bottom: 2%;
+}
+
+.user-view {
+  margin-left: 10px;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.main-container{
+  min-height:100vh;
+  display: flex;
+}
+
+.source-container{
+  min-height: 100vh;
+  position: relative;
+}
+
+.home-container {
+  display: block;
+  position: relative;
+}
+
+.sidebar{
+  min-height:100%;
+  background-color: rgb(255, 255, 255);
+  max-width: 300px;
+  min-width: 350px;
+  display: block;
+  box-shadow: 5px 5px 5px -2px #888;
+  
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rem-message {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-bottom: 2%;
+  display: flex;
+  justify-content: space-around;
+}

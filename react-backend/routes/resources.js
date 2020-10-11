@@ -5,7 +5,7 @@ var url = "mongmongodb+srv://Rheshav:SBgxypqdhUv859Q@sesg3.8gnmg.azure.mongodb.n
 
 const MongoClient = require('mongodb').MongoClient;
 
-const client = new MongoClient(url);
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const dbName = 'eLibrary';
 
@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
 /* Database Related Functions */
 
 //Database document retrieval. Retrieves all data from the specified collection 
-router.get('/get-data', function(req, res, next){
+router.get('/get-requests', function(req, res, next){
   
   var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
   
@@ -27,7 +27,7 @@ router.get('/get-data', function(req, res, next){
     
     const db = client.db(dbName);
     
-    var cursor = db.collection('Resources').find();
+    var cursor = db.collection('Requests').find();
     
     //Looping through the documents in the database to store into local array
     cursor.forEach(function(doc, err) {
@@ -47,10 +47,11 @@ var searchResults = []; //Used to store all the data into a local array to then 
 router.get('/search-results', function(req,res,next){
   
   var error = [{"_id": "01", 
-                "title":" Your Search Results returned Nothing"
+                "title":"Your Search Results returned Nothing"
               }];
   if(searchResults != 0){
     res.json(searchResults);
+    searchResults = [];
   }
   else res.json(error);
 
@@ -107,20 +108,39 @@ router.post('/insert', function(req, res, next) {
   res.redirect('/home');
 });
 
+var remErr = false;
+
 router.post('/remove', function(req, res, next) {
   
   MongoClient.connect(url, function(err, client) {
-    if (err) throw err;
+
     const db = client.db(dbName);
-    var myquery = { title: req.body.title };
-    db.collection('Resources').deleteOne(myquery, function(err, obj) {
+
+    if(db.collection('User').countDocuments({ books: req.body.refnumber }, limit=1) == 0){
+
       if (err) throw err;
-      console.log("1 document deleted");
-      client.close();
-    });
+      
+      var myquery = { refnumber: req.body.refnumber };
+      db.collection('Resources').deleteOne(myquery, function(err, obj) {
+        if (err) throw err;
+        console.log("1 document deleted");
+        client.close();
+      });
+      res.redirect('/home');
+    }
+    else {
+      console.log('User has borrowed this book. Unable to delete.');
+      remErr = true;
+      res.redirect('/home');
+    }
+
   }); 
-  res.redirect('/home');
-  
+
+});
+
+router.get('/get-rem-err', function(req,res) {
+  res.json(remErr);
+  remErr = false;
 });
 
 router.post('/edit', function(req, res, next) {
@@ -137,6 +157,31 @@ router.post('/edit', function(req, res, next) {
   }); 
   res.redirect('/home');
 });
+
+router.post('/book-request', function(req, res, next) {
+  var item = {
+    title: req.body.title,
+    content: req.body.description,
+    author: req.body.author,
+    refnumber: req.body.refnumber
+  }
+
+  MongoClient.connect(url, function(err, client){
+    assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
+
+    const db = client.db(dbName);
+
+    //Mongodb Insert function
+    db.collection('Requests').insertOne(item, function(err, result){
+      assert.equal(null, err);
+      console.log('Item inserted'); //logs on console on successful insertion
+      client.close(); //closing database
+    });
+
+  });
+  res.redirect('/home');
+});
+
 
 /* End Database Related Functions */
 

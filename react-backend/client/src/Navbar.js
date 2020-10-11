@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import logo from "./logo.svg";
-import "./App.css";
+import "./Navbar.css";
 import about from "./Assets/help.svg";
 import home from "./Assets/home-run.svg";
 import user from "./Assets/user.svg";
@@ -15,9 +15,10 @@ import User from "./User.js";
 import Login from "./Login.js";
 import SplashScreen from "./SplashScreen";
 import SignUp from "./SignUp.js";
+import CategoryView from "./CategoryView.js";
 //import SearchResults from './SearchResults.js';
 
-import notification from './Assets/notification.svg';
+//import notification from "./Assets/notification.svg";
 
 class Navbar extends Component {
   state = { status: false, username: "" };
@@ -37,7 +38,7 @@ class Navbar extends Component {
         <div>
           <div className="Toolbar">
             <img src={logo} className="App-logo" alt="logo" />
-            eLibrary Suite
+            <div class="font-weight-bold">eLibrary Suite</div>
             <div>
               <LoginStatus LoggedIn={this.state.status} />
             </div>
@@ -58,6 +59,9 @@ class Navbar extends Component {
               </Route>
               <Route path="/user">
                 <User />
+              </Route>
+              <Route path="/categoryview">
+                <CategoryView />
               </Route>
               {/*}
               <Route path="/search-error">
@@ -86,30 +90,36 @@ function LoginStatus(props) {
 function IsLoggedIn(props) {
   return (
     <nav>
-      <button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" color="white">
-        <img src={notification} className="App-logo" alt="notification" />
-        <span class="badge badge-light">3</span>
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="https://github.com/">
-          Action
-        </a>
-        <a class="dropdown-item" href="https://github.com/">
-          Another action
-        </a>
-        <a class="dropdown-item" href="https://github.com/">
-          Something else here
-        </a>
-      </div>
       <Link to="/home">
         <img src={home} className="App-logo" alt="home" />
       </Link>
       <Link to="/about">
         <img src={about} className="App-logo" alt="about" />
       </Link>
-      <Link to="/user">
-        <img src={user} className="App-logo" alt="user" />
+      <Link to="/categoryview">
+        <img src={follow} className="App-logo" alt="categoryview" />
       </Link>
+      <img
+        src={user}
+        className="App-logo"
+        alt="account"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        color="white"
+      />
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <Link to="/user">
+          <button class="drop-button">Account</button>
+        </Link>
+        <form action="/logout" method="post">
+          <button type="submit" class="drop-button">
+            Log Out
+          </button>
+        </form>
+      </div>
     </nav>
   );
 }
