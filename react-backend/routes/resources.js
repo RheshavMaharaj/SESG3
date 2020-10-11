@@ -42,6 +42,31 @@ router.get('/get-requests', function(req, res, next){
 
 });
 
+router.get('/get-category-fiction', function(req, res, next){
+  
+  var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
+  
+  MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
+    
+    assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
+    
+    const db = client.db(dbName);
+    
+    var cursor = db.collection('Resources').find({ category: "Fiction" });
+    
+    //Looping through the documents in the database to store into local array
+    cursor.forEach(function(doc, err) {
+      assert.equal(null, err);
+      resultArray.push(doc); //storing to local array
+    }, function(){
+      client.close(); //closing database
+      res.json(resultArray);
+    });
+
+  });
+
+});
+
 var searchResults = []; //Used to store all the data into a local array to then be mapped in Home.js
 
 router.get('/search-results', function(req,res,next){
@@ -89,7 +114,8 @@ router.post('/insert', function(req, res, next) {
     title: req.body.title,
     content: req.body.description,
     author: req.body.author,
-    refnumber: req.body.refnumber
+    refnumber: req.body.refnumber,
+    category: req.body.category
   }
 
   MongoClient.connect(url, function(err, client){

@@ -4,8 +4,28 @@ import "./CategoryView.css";
 import library1 from "./Assets/library-1.jpg";
 import library2 from "./Assets/library-2.jpg";
 import library3 from "./Assets/library-3.jpg";
+
+
 export default class CategoryView extends Component {
+
+  state = {
+    fiction: [],
+    non_fiction: [],
+    history: [],
+    math: [],
+    graphic_novel: [],
+    classic: [],
+    other: []
+  }
+  componentDidMount() {
+    fetch("/get-category-fiction")
+      .then((res) => res.json())
+      .then((fiction) => this.setState({ fiction }));
+  }
+
+
   render() {
+
     return (
       <div className="main-container">
         <div className="sidebar">
@@ -153,7 +173,14 @@ export default class CategoryView extends Component {
                         <h5 class="modal-title">Fiction</h5>
                       </div>
                       <div class="modal-body">
-                        <p>fiction books</p>
+                        {this.state.fiction.map((book) => (
+                          <div key={book._id}>
+                            <button type="button" className="list-group-item list-group-item-action">
+                              {book.title}
+                            </button>
+                            <br/>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
