@@ -353,6 +353,7 @@ function BookDetails(props) {
                 <label>Description: {BookContent} </label> <br />
                 <label>Author: {BookAuthor} </label> <br />
                 <label>Book Reference: {BookRef} </label> <br />
+                {/* <label>Book Reference: {BookLink} </label> <br /> */}
                 <form action="/return-book" method="post" id={"return-book"+BookRef}>
                   <div>
                     <input type="hidden" id="refnumber" name="refnumber" value={BookRef} />{" "}

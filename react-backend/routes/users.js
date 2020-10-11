@@ -20,7 +20,7 @@ var block = false; //Tracking if user can borrow book or not
 
 //Database document retrieval. Retrieves all data from the specified collection 
 router.get('/get-users', function(req, res, next){
-  
+
   var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
   
   MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
@@ -64,13 +64,14 @@ router.post('/insert-user', function(req, res, next) {
       email: req.body.email,
       password: hash
     }
-  
+ 
+    //Access the database
     MongoClient.connect(url, function(err, client){
       assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
   
       const db = client.db(dbName);
       var docCount;
-     
+
       db.collection("User").countDocuments({ email: req.body.email }, limit=1)
       .then(function(numItems) {
         console.log(numItems); // Use this to debug
@@ -127,7 +128,7 @@ router.post('/insert-user', function(req, res, next) {
 
 });
 
-
+// Edit User: queries user by first name and updates existing user values.  
 router.post('/edit-user', function(req, res, next) {
   MongoClient.connect(url, function(err, client) {
     if (err) throw err;
