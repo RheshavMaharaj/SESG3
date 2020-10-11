@@ -38,7 +38,7 @@ class Navbar extends Component {
         <div>
           <div className="Toolbar">
             <img src={logo} className="App-logo" alt="logo" />
-            <div class="font-weight-bold">eLibrary Suite</div>
+            <div className="font-weight-bold">eLibrary Suite</div>
             <div>
               <LoginStatus LoggedIn={this.state.status} />
             </div>
@@ -110,12 +110,12 @@ function IsLoggedIn(props) {
         aria-expanded="false"
         color="white"
       />
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <Link to="/user">
-          <button class="drop-button">Account</button>
+          <button className="drop-button">Account</button>
         </Link>
         <form action="/logout" method="post">
-          <button type="submit" class="drop-button">
+          <button type="submit" className="drop-button">
             Log Out
           </button>
         </form>

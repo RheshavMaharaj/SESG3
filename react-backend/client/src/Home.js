@@ -71,7 +71,7 @@ class Home extends Component {
           <div className="searchbar">
             <h3>Search Here</h3>
             <form class="input-group" action="/search" method="post">
-              <input class="form-control" id="search" name="search" type="text" placeholder="Search" aria-label="Search" />
+              <input className="form-control" id="search" name="search" type="text" placeholder="Search" aria-label="Search" />
               <div class="input-group-append">
                 <button class="btn btn-secondary" type="submit">
                   <FontAwesomeIcon icon={faSearch} />
@@ -538,6 +538,18 @@ function AddBook() {
                   <div class="form-group">
                     <label for="Author">Author</label>
                     <input type="text" class="form-control" id="author" name="author" placeholder="Enter Resource Author(s)"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="Category">Category</label>
+                    <select id="category" name="category" class="form-control" required>
+                      <option value="Fiction">Fiction</option>
+                      <option value="Non-fiction">Non-fiction</option>
+                      <option value="History">History</option>
+                      <option value="Math">Math</option>
+                      <option value="Graphic Novel">Graphic Novel</option>
+                      <option value="Classic">Classic</option>
+                      <option value="Other">Other</option>
+                    </select>
                   </div>
                   <div class="form-group">
                     <label for="Reference Number">Reference Number</label>

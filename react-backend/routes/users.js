@@ -180,6 +180,7 @@ router.post('/handle-login', function(req,res,next) {
             req.session.user = user;
             console.log("First Name: " + user.first_name + " " + "User Email: " + user.email);
             errMsg = false;
+            signErrMsg = false;
             res.redirect('/home');
             
           } else {
