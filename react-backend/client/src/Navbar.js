@@ -8,6 +8,7 @@ import home from "./Assets/home-run.svg";
 import user from "./Assets/user.svg";
 import follow from "./Assets/follow.svg";
 import enter from "./Assets/enter.svg";
+import category from "./Assets/open-book.svg";
 
 import Home from "./Home.js";
 import About from "./About.js";
@@ -97,7 +98,7 @@ function IsLoggedIn(props) {
         <img src={about} className="App-logo" alt="about" />
       </Link>
       <Link to="/categoryview">
-        <img src={follow} className="App-logo" alt="categoryview" />
+        <img src={category} className="App-logo" alt="categoryview" />
       </Link>
       <img
         src={user}

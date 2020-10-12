@@ -112,11 +112,16 @@ class Home extends Component {
             <div className="home">
               <div className="list-group">
                 <h3>Your Resources</h3>
-                <LoadingBooks loading={this.state.loading} books={this.state.books} />
+                <div className="card p-4">
+                  <LoadingBooks loading={this.state.loading} books={this.state.books} />
+                </div>
               </div>
               <div className="fine-container">
                 <h3>Your Outstanding Fines</h3>
-                <LoadingFines Fines={this.state.fines} loading={this.state.loading} />
+                <div className="card p-4">
+                  <LoadingFines Fines={this.state.fines} loading={this.state.loading} />
+                </div>
+                
               </div>
             </div>
             <div style={{ position: 'absolute', top: 10, right: 10, width: 250 }}>
@@ -149,7 +154,20 @@ function Search(props) {
   var StatBlock = props.StatBlock;
   var BorrowStatus = props.BorrowStatus;
 
-  if (!(Results.length >= 1 && Results[0].title === "Your Search Results returned Nothing")) {
+  
+  if (Results.length === 1 && Results[0].title === "No Search") {
+    return(
+      <div className="list-group text-center">
+        <h4>Search Something</h4>
+      </div>
+    )
+  } else if (Results.length === 1 && Results[0].title === "No Results") {
+    return (
+      <div className="list-group text-center">
+        <h4>No Results</h4>
+      </div>
+    );
+  } else {
     return (
       <div className="search-group">
         <h3>Search Results</h3>
@@ -166,9 +184,7 @@ function Search(props) {
           </div>
         ))}
       </div>
-    );
-  } else {
-    return <div className="list-group text-center"></div>;
+    )
   }
 }
 
@@ -184,18 +200,27 @@ function LoadingBooks(props) {
         </div>
       </div>
     );
+  } else if(!loading && books.length === 0){
+    
+    return <h3 className="text-muted text-center" style={{fontFamily: "verdana"}}>Go ahead and borrow a Resource!</h3>
+
   } else if (!loading) {
-    return books.map((book) => (
-      <div key={book._id}>
-        <BookDetails
-          BookTitle={book.title}
-          BookContent={book.content}
-          BookAuthor={book.author}
-          BookRef={book.refnumber}
-          BookDue={book.dueDate}
-        />
+    return (
+      <div>
+        {books.map((book) => (
+          <div className="m-1" key={book._id}>
+            <BookDetails
+              BookTitle={book.title}
+              BookContent={book.content}
+              BookAuthor={book.author}
+              BookRef={book.refnumber}
+              BookCategory={book.category}
+              BookDue={book.dueDate}
+            />
+          </div>
+        ))}
       </div>
-    ));
+    );
   }
 }
 
@@ -211,6 +236,10 @@ function LoadingFines(props) {
         </div>
       </div>
     );
+  } else if(!loading && Fines.length === 0){
+    
+    return <h3 className="text-muted text-center" style={{fontFamily: "verdana"}}>You currently have no outstanding fines</h3>
+
   } else if (!loading) {
     return Fines.map((fine) => (
       <div key={fine._id}>
@@ -219,7 +248,7 @@ function LoadingFines(props) {
         </button>
       </div>
     ))
-  }
+  } 
 }
 
 function UserView(props) {
@@ -311,7 +340,11 @@ function Staff() {
 }
 
 function Student() {
-  return <div className="admin-control">I am now showing the student view</div>;
+  return (
+    <div className="admin-control">
+      
+    </div>
+  )
 }
 
 function BookDetails(props) {
@@ -320,6 +353,7 @@ function BookDetails(props) {
   var BookDue = props.BookDue;
   var BookRef = props.BookRef;
   var BookTitle = props.BookTitle;
+  var BookCategory = props.BookCategory;
 
   var ModalTarget = "#exampleModalCenter" + BookRef;
   var ModalTargetID = "exampleModalCenter" + BookRef;
@@ -353,7 +387,7 @@ function BookDetails(props) {
                 <label>Description: {BookContent} </label> <br />
                 <label>Author: {BookAuthor} </label> <br />
                 <label>Book Reference: {BookRef} </label> <br />
-                {/* <label>Book Reference: {BookLink} </label> <br /> */}
+                <label>Book Category: {BookCategory} </label> <br />
                 <form action="/return-book" method="post" id={"return-book"+BookRef}>
                   <div>
                     <input type="hidden" id="refnumber" name="refnumber" value={BookRef} />{" "}
@@ -392,7 +426,6 @@ function BorrowBook(props) {
   else if(BorrowStat){
     status = "Limit";
   }
-
 
   if(status === "Allowed"){
     return (
