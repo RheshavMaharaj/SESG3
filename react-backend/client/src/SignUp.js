@@ -4,19 +4,57 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-
+import Home from "./Home.js";
 
 export default class SignUp extends Component {
   
-  state = { signErrMsg: false }
+  state = { signErrMsg: false, status: false, username: "" }
 
   componentDidMount() {
     fetch("/get-signerrmsg")
       .then((res) => res.json())
       .then((signErrMsg) => this.setState({ signErrMsg }));
+    fetch("/login-status")
+      .then((res) => res.json())
+      .then((status) => this.setState({ status }));
+    fetch("/get-session-user")
+      .then((res) => res.json())
+      .then((username) => this.setState({ username }));
   }
-  
+
   render() {
+    return(
+      <SessionView IsLoggedIn={this.state.status} ErrorMessage={this.state.signErrMsg} />
+    );
+  }
+}
+
+function Message(props) {
+  
+  var err = props.err;
+ 
+  if(err) {
+    return (
+      <div>
+        <br />
+        <div class="alert alert-danger text-center m" role="alert">
+          User Already Exists! Please Enter a Different Email.
+        </div>
+      </div>
+    )
+  }
+  else {
+    return <div></div>
+  }
+
+}
+
+function SessionView(props) {
+
+  var IsLoggedIn = props.IsLoggedIn;
+  var ErrorMessage = props.ErrorMessage;
+
+  if(!IsLoggedIn) {
     return (
       <div class="col-md-6 offset-md-3 p-2">
         <h2 class="font-weight-bold">Sign Up</h2>
@@ -46,7 +84,7 @@ export default class SignUp extends Component {
                         required
                       />
                     </Form.Group>
-
+  
                     <Form.Group controlId="registerFormPassword">
                       <Form.Label>University ID</Form.Label>
                       <Form.Control
@@ -123,29 +161,15 @@ export default class SignUp extends Component {
             </Col>
           </Row>
         </container>
-        <Message err={this.state.signErrMsg} />
+        <Message err={ErrorMessage} />
       </div>
     );
   }
-}
-
-function Message(props) {
-  
-  var err = props.err;
- 
-  if(err) {
-    return (
-      <div>
-        <br />
-        <div class="alert alert-danger text-center m" role="alert">
-          User Already Exists! Please Enter a Different Email.
-        </div>
-      </div>
-    )
-  }
   else {
-    return <div></div>
+    return(
+      <Home />
+    );
   }
-
+  
 }
 

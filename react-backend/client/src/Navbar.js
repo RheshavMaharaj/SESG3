@@ -8,6 +8,7 @@ import home from "./Assets/home-run.svg";
 import user from "./Assets/user.svg";
 import follow from "./Assets/follow.svg";
 import enter from "./Assets/enter.svg";
+import category from "./Assets/open-book.svg";
 
 import Home from "./Home.js";
 import About from "./About.js";
@@ -38,7 +39,7 @@ class Navbar extends Component {
         <div>
           <div className="Toolbar">
             <img src={logo} className="App-logo" alt="logo" />
-            <div class="font-weight-bold">eLibrary Suite</div>
+            <div className="font-weight-bold">eLibrary Suite</div>
             <div>
               <LoginStatus LoggedIn={this.state.status} />
             </div>
@@ -97,7 +98,7 @@ function IsLoggedIn(props) {
         <img src={about} className="App-logo" alt="about" />
       </Link>
       <Link to="/categoryview">
-        <img src={follow} className="App-logo" alt="categoryview" />
+        <img src={category} className="App-logo" alt="categoryview" />
       </Link>
       <img
         src={user}
@@ -110,12 +111,12 @@ function IsLoggedIn(props) {
         aria-expanded="false"
         color="white"
       />
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <Link to="/user">
-          <button class="drop-button">Account</button>
+          <button className="drop-button">Account</button>
         </Link>
         <form action="/logout" method="post">
-          <button type="submit" class="drop-button">
+          <button type="submit" className="drop-button">
             Log Out
           </button>
         </form>
