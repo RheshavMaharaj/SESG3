@@ -133,14 +133,13 @@ router.post('/edit-user', function(req, res, next) {
   MongoClient.connect(url, function(err, client) {
     if (err) throw err;
     const db = client.db(dbName);
-    var myquery = { first_name: req.session.user.first_name };
+    var myquery = { email: req.session.user.email };
     var newvalues = { $set: {
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         iden_number: req.body.iden_number,
         contact_number: req.body.contact_number,
         faculty: req.body.faculty,
-        email: req.body.email,
       }
     }
     db.collection('User').updateOne(myquery, newvalues, function(err, res) {
@@ -149,6 +148,7 @@ router.post('/edit-user', function(req, res, next) {
       client.close();
     });
   }); 
+  
   res.redirect('/user');
 });
 
@@ -236,12 +236,31 @@ router.get('/get-session-user', function(req,res,next) {
 
 router.get('/get-user-type', function(req,res,next) {
   var userType = req.session.user.user_type;
+  
   res.json(userType);
 });
 
 router.get('/get-user-info', function(req,res,next) {
-  var user = req.session.user;
-  res.json(user);
+  MongoClient.connect(url, function(err, client) {
+    
+    if (err) throw err;
+    const db = client.db(dbName);
+
+    db.collection('User').findOne({ 
+      email: req.session.user.email
+    },
+    function(err, result) {
+      
+      if (err) throw err;
+      localUser = result;
+      req.session.user = localUser;
+      console.log("Changed to user " + req.session.user.first_name);
+      client.close();
+      //console.log(localUser);
+      res.json(localUser);
+
+    });
+  });
 });
 
 router.post('/borrow', function(req,res,next){

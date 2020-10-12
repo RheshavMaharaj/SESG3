@@ -10,17 +10,16 @@ export default class User extends Component {
     super();
     this.state = {
       user: {}, 
-      books: []
+      books: [],
+      loading: true
     };
   }
 
   componentDidMount() {
     fetch("/get-user-info")
       .then((res) => res.json())
-      .then((user) => this.setState({ user }));
-    fetch("/get-resources")
-      .then((res) => res.json())
-      .then((books) => this.setState({ books }));
+      .then((user) => this.setState({ user }))
+      .then((loading) => this.setState({ loading: false }));
   }
 
   render() {
@@ -230,23 +229,6 @@ export default class User extends Component {
                                 required
                               />
                             </div>
-                          </div>
-
-                          <div class="form-row">
-                            <div class="form-group col-md-6">
-                              <label for="email" class="font-weight-bold">
-                                Email
-                              </label>
-
-                              <input
-                                type="email"
-                                class="form-control"
-                                id="email"
-                                name="email"
-                                placeholder="Email@example"
-                                required
-                              />
-                            </div>
                             <div class="form-group col-md-6">
                               <label for="inputNumber" class="font-weight-bold">
                                 Contact Number
@@ -262,8 +244,6 @@ export default class User extends Component {
                                 required
                               />
                             </div>
-                          </div>
-                          <div class="form-row">
                             <div class="form-group col-md-6">
                               <label
                                 for="LabelFaculty"
@@ -398,20 +378,25 @@ export default class User extends Component {
             </div>
           </form>
         </div>
-        <div className="container-fluid">
-          Borrowing History
-          {this.state.books.map((book) => (
-            <div key={book._id}>
-              <button
-                type="button"
-                className="list-group-item list-group-item-action"
-              >
-                {book.title}
-              </button>
-            </div>
-          ))}
+        <LoadingUserDetails Loading={this.state.loading} />
+      </div>
+    );
+  }
+}
+
+function LoadingUserDetails(props) {
+  var Loading = props.Loading;
+
+  if (Loading) {
+    return (
+      <div class="d-flex justify-content-center m-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
         </div>
       </div>
     );
   }
+  else return  <div></div> ;
+  
+
 }
