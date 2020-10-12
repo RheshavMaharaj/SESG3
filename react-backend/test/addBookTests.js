@@ -13,10 +13,10 @@ const resourceSchema = new Schema({
 });
 
 
-//Create a new collection called 'Name'
+//Create a new collection called 'Resource'
 const Resource = mongoose.model("Resource", resourceSchema);
 
-describe('Database Tests', function() {
+describe('Add Resource to Database Tests', function() {
   //Before starting the test, create a sandboxed database connection
   //Once a connection is established invoke done()
   before(function (done) {
@@ -31,7 +31,7 @@ describe('Database Tests', function() {
 
   describe('Test Database', function() {
     //Save resource to database
-    it('New resource saved to test database', function(done) {
+    it('New resource saved to database', function(done) {
       var testResource = Resource({
         title: "Lord of the Rings",
         content: "content",
@@ -41,9 +41,10 @@ describe('Database Tests', function() {
  
       testResource.save(done);
     });
+    
 
     it('Does not save incorrect format to database', function(done) {
-      //Attempt to save with wrong info. An error should trigger
+      //Attempt to save resource with wrong info. An error should trigger
       var wrongSave = Resource({
         notTitle: 'Not Title',
         notContent: "Not Content",
@@ -57,7 +58,7 @@ describe('Database Tests', function() {
       });
     });
 
-    it('Should retrieve data from database', function(done) {
+    it('Should retrieve resource from database', function(done) {
       //Look up the 'testResource' object previously saved.
       Resource.find({
         title: "Lord of the Rings" }, (err, name) => {
