@@ -418,6 +418,10 @@ function BorrowBook(props) {
   var BookTitle = props.BookTitle;
   var BorrowStat = props.BorrowStat;
 
+  var modaltarget = "#exampleModalCenterBorrow" + BookRef;
+  var modalid = "exampleModalCenterBorrow" + BookRef;
+  var formid = BookRef;
+
   var status = "Allowed";
 
   if(Block){
@@ -430,10 +434,10 @@ function BorrowBook(props) {
   if(status === "Allowed"){
     return (
       <div>
-        <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenterBorrow">
+        <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target={modaltarget}>
           {BookTitle}
         </button>
-        <div class="modal fade" id="exampleModalCenterBorrow" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id={modalid} tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -442,16 +446,15 @@ function BorrowBook(props) {
                 </h5>
               </div>
               <div className="modal-body">
-                <form action="/borrow" method="post" id="borrow-book-form">
+                <form action="/borrow" method="post" id={formid}>
                   <div>
-                    <label>Title: </label>
+                    <label>Title: {" "}</label>
                     <label>{BookTitle}</label>
                     <input type="hidden" id="title" name="title" value={BookTitle}/>{" "}
                     <br />
                     <label>Content: </label>
                     <label>{BookContent}</label>
-                    <input type="hidden" id="content" name="content" value={BookContent}
-                    />
+                    <input type="hidden" id="content" name="content" value={BookContent}/>{" "}
                     <br />
                     <label>Author: </label>
                     <label>{BookAuthor}</label>
@@ -468,7 +471,7 @@ function BorrowBook(props) {
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
                   Close
                 </button>
-                <button type="submit" class="btn btn-primary" form="borrow-book-form">
+                <button type="submit" class="btn btn-primary" form={formid}>
                   Submit
                 </button>
               </div>

@@ -9,6 +9,12 @@
 
 }
 
+.App-logo-left {
+  height: 25px;
+  margin: 10px;
+  margin-right: 5%;
+}
+
 .App-logo:hover {
   color: blue;
 }

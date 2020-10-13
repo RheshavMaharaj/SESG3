@@ -38,8 +38,8 @@ class Navbar extends Component {
       <Router>
         <div>
           <div className="Toolbar">
-            <img src={logo} className="App-logo" alt="logo" />
-            <div className="font-weight-bold">eLibrary Suite</div>
+            <img src={logo} className="App-logo-left" alt="logo" />
+            <div className="font-weight-bold text-center">eLibrary Suite</div>
             <div>
               <LoginStatus LoggedIn={this.state.status} />
             </div>

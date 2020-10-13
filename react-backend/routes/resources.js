@@ -252,8 +252,12 @@ router.post('/search', function(req,res,next) {
     assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
     
     const db = client.db(dbName);
+
+    var searchparam = "/" + req.body.search + "/";
+
+    console.log(searchparam);
     
-    var cursor = db.collection('Resources').find({ title: req.body.search });
+    var cursor = db.collection('Resources').find({ title: new RegExp(req.body.search, 'i') });
     
     //Looping through the documents in the database to store into local array
     cursor.forEach(function(doc, err) {
@@ -270,6 +274,7 @@ router.post('/search', function(req,res,next) {
 
 });
 
+//Add Requested Resource
 
 
 //Database insert function via router. Allows data updates on page loads

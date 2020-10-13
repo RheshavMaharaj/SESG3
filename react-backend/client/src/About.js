@@ -121,7 +121,7 @@ export default class About extends Component {
                 </div>
               </div>
             </div>
-
+            {/*}
             <button
               type="button"
               class="btn btn-danger"
@@ -130,6 +130,7 @@ export default class About extends Component {
             >
               Report New Query
             </button>
+            */}
           </div>
 
           <div
