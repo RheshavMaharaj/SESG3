@@ -225,6 +225,7 @@ router.get('/login-status', function(req, res) {
 router.post('/logout', function(req, res){
   req.session.destroy(function(){
     console.log("user logged out.");
+    block = false;
   });
   res.redirect('/login');
 });
@@ -315,6 +316,9 @@ router.get('/borrow-status', function(req, res, next){
 
       if(resultArray.length >= 5){
         borrStat = true;
+      }
+      else {
+        borrStat = false;
       }
 
       client.close();
