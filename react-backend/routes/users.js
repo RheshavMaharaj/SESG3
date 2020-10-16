@@ -12,6 +12,7 @@ const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology:
 const dbName = 'eLibrary'; //MongoDB specified Library Cluster
 let date_ob = new Date(); //Initialising Date objects for Fine Tracking
 var block = false; //Tracking if user can borrow book or not
+borrErr = false;
 
 
 
@@ -74,7 +75,7 @@ router.post('/insert-user', function(req, res, next) {
 
       db.collection("User").countDocuments({ email: req.body.email }, limit=1)
       .then(function(numItems) {
-        console.log(numItems); // Use this to debug
+        //console.log(numItems); // Use this to debug
         docCount = numItems;
 
         //If statement to check if the email already exists
@@ -82,7 +83,7 @@ router.post('/insert-user', function(req, res, next) {
           //Mongodb Insert function
           db.collection('User').insertOne(item, function(err, result){
             assert.equal(null, err);
-            console.log('Item inserted'); //logs on console on successful insertion
+            //console.log('Item inserted'); //logs on console on successful insertion
       
             var transporter = nodemailer.createTransport({
               host: "smtp.gmail.com",
@@ -130,7 +131,7 @@ router.post('/insert-user', function(req, res, next) {
 
 // Edit User: queries user by first name and updates existing user values.  
 router.post('/edit-user', function(req, res, next) {
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) {
     if (err) throw err;
     const db = client.db(dbName);
     var myquery = { email: req.session.user.email };
@@ -144,7 +145,7 @@ router.post('/edit-user', function(req, res, next) {
     }
     db.collection('User').updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
-      console.log("1 document updated");
+      //console.log("1 document updated");
       client.close();
     });
   }); 
@@ -160,7 +161,7 @@ router.post('/handle-login', function(req,res,next) {
 
   var user;
 
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) {
     if (err) throw err;
     const db = client.db(dbName);
     db.collection("User").findOne({
@@ -176,9 +177,9 @@ router.post('/handle-login', function(req,res,next) {
         bcrypt.compare(req.body.password, user.password, function(err, response) {
           if(response && user.email == req.body.email) {
             // Passwords match
-            console.log("Matched");
+            //console.log("Matched");
             req.session.user = user;
-            console.log("First Name: " + user.first_name + " " + "User Email: " + user.email);
+            console.log("First Name: " + user.first_name + " // " + "User Email: " + user.email);
             errMsg = false;
             signErrMsg = false;
             res.redirect('/home');
@@ -187,7 +188,7 @@ router.post('/handle-login', function(req,res,next) {
             // Passwords don't match
             errMsg = true;
             res.redirect('/login');
-            console.log("Does not match");
+            //console.log("Does not match");
 
           } 
         });
@@ -213,18 +214,19 @@ router.get('/login-status', function(req, res) {
   if(req.session.user){
     status = true;
   }
+  /*
   if(status){
     console.log("User is Logged in");
   }
   else console.log("User is Logged out");
-  
+  */
   res.json(status);
   
 });
 
 router.post('/logout', function(req, res){
   req.session.destroy(function(){
-    console.log("user logged out.");
+    //console.log("user logged out.");
     block = false;
   });
   res.redirect('/login');
@@ -242,7 +244,7 @@ router.get('/get-user-type', function(req,res,next) {
 });
 
 router.get('/get-user-info', function(req,res,next) {
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) {
     
     if (err) throw err;
     const db = client.db(dbName);
@@ -255,7 +257,7 @@ router.get('/get-user-info', function(req,res,next) {
       if (err) throw err;
       localUser = result;
       req.session.user = localUser;
-      console.log("Changed to user " + req.session.user.first_name);
+      //console.log("Changed to user " + req.session.user.first_name);
       client.close();
       //console.log(localUser);
       res.json(localUser);
@@ -263,6 +265,8 @@ router.get('/get-user-info', function(req,res,next) {
     });
   });
 });
+
+
 
 router.post('/borrow', function(req,res,next){
   
@@ -282,25 +286,53 @@ router.post('/borrow', function(req,res,next){
 
   dDate = dyyyy + '-' + dmm + '-' + ddd;
 
-  MongoClient.connect(url, function(err, client) {
+  var cndtn;
+  
+  MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) {
     if (err) throw err;
     const db = client.db(dbName);
     var myquery = { email: req.session.user.email };
     var newvalues = { $push: { books: req.body.refnumber , fines: { resource: req.body.refnumber, borrowdate: borrDate , limit: 14, duedate: dDate} } };
 
-    db.collection('User').updateOne(myquery, newvalues, function(err, res) {
-      if (err) throw err;
-      console.log("1 document updated");
-      client.close();
-    });
-  }); 
-  res.redirect('/home');
+    db.collection('Resources').findOne({
+      refnumber: req.body.refnumber
+    }, function(err, result) {
+      
+      cndtn = result.quantity;
+      //console.log(cndtn);
+      
+      if(cndtn > 0){
 
+        db.collection('User').updateOne(myquery, newvalues, function(err, res) {
+          if (err) throw err;
+          //console.log("1 document updated");
+          //client.close();
+        });
+        
+        var resourceq = { refnumber: req.body.refnumber };
+        var resourcesnv = {$inc: {quantity: -1}};
+    
+        db.collection('Resources').updateOne(resourceq, resourcesnv, function(err, result) {
+          if (err) throw err;
+          client.close();
+        });
+
+        res.redirect('/home');
+
+      } else {
+        borrErr = true;
+        res.redirect('/home');
+      }
+
+    });
+
+  });
+ 
 });
 
 var borrStat = false;
 router.get('/borrow-status', function(req, res, next){
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) {
     
     if (err) throw err;
     const db = client.db(dbName);
@@ -322,7 +354,6 @@ router.get('/borrow-status', function(req, res, next){
       }
 
       client.close();
-      console.log(borrStat);
       res.json(borrStat);
 
     
@@ -331,7 +362,7 @@ router.get('/borrow-status', function(req, res, next){
 });
 
 router.post('/return-book', function(req,res,next){
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) {
     if (err) throw err;
     const db = client.db(dbName);
     var myquery = { email: req.session.user.email };
@@ -342,9 +373,19 @@ router.post('/return-book', function(req,res,next){
     
     db.collection('User').updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
-      console.log("1 document updated");
+      //console.log("1 document updated");
+      
+    });
+
+    var resourceq = { refnumber: req.body.refnumber };
+    var resourcesnv = {$inc: {quantity: 1}};
+  
+    db.collection('Resources').updateOne(resourceq, resourcesnv, function(err, result) {
+      if (err) throw err;
       client.close();
     });
+
+    
   }); 
   res.redirect('/home');
 });
@@ -368,7 +409,7 @@ router.get('/get-user-fines', async function(req,res,next) {
 
   //var nextDate = new Date( Date.now() + 14 * 24 * 60 * 60 * 1000);
 
-  MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
+  MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client){ //Connecting to Mongodb
 
     assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
     
@@ -393,7 +434,7 @@ router.get('/get-user-fines', async function(req,res,next) {
 
         if(diffDays > resultArray[i].limit) {
           
-          console.log("Document Date: " + resDate);
+          //console.log("Document Date: " + resDate);
           resources.push(resultArray[i].resource);
           block = true;
 
@@ -429,7 +470,7 @@ router.get('/get-resources', async function(req,res,next) {
   var resources = [];
     
 
-  MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
+  MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client){ //Connecting to Mongodb
 
     assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
     
@@ -473,7 +514,7 @@ router.get('/get-fine-status', async function(req,res,next) {
 });
 
 router.post('/edit-password', function(req,res,next){
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, {useUnifiedTopology: true}, function(err, client) {
     if (err) throw err;
     const db = client.db(dbName);
     var myquery = { email: req.session.user.email };
@@ -484,7 +525,7 @@ router.post('/edit-password', function(req,res,next){
     }
     db.collection('User').updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
-      console.log("1 document updated");
+      //console.log("1 document updated");
       client.close();
     });
   }); 
@@ -495,54 +536,3 @@ router.post('/edit-password', function(req,res,next){
 /* End Database Related Functions */
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-//To Do
-/*
-router.get('/get-user-resources', function(req, res, next){
-  
-  var resultArray = []; //Used to store all the data into a local array to then be mapped in Home.js
-  var localUser;
-
-  var resources = [];
-  
-  MongoClient.connect(url, function(err, client){ //Connecting to Mongodb
-    
-    assert.equal(null, err); //Used to compare data and throw exceptions if data does not match. Used for development purposes only
-    
-    const db = client.db(dbName);
-    
-    db.collection('User').findOne({ 
-      email: req.session.user.email
-    },
-    function(err, result) {
-      if (err) throw err;
-      localUser = result;
-      resultArray = localUser.books;
-      //console.log(resultArray);
-
-      var cursor = db.collection('Resources').find({ refnumber: { $in : resultArray } });
-
-      cursor.forEach(function(doc, err) {
-        assert.equal(null, err);
-        resources.push(doc); //storing to local array
-      }, function(){
-        client.close(); //closing database
-        res.json(resources);
-        //console.log(resources);
-      });
-
-    });
-
-  });
-
-});
-*/

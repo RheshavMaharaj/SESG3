@@ -27,15 +27,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get('/test', function(req, res){
-  if(req.session.page_views){
-    req.session.page_views++;
-    res.json("You visited this page " + req.session.page_views + " times ");
-  } else {
-    req.session.page_views = 1;
-    res.json("Welcome to this page for the first time! ");
-  }
-});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

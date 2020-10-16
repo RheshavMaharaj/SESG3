@@ -180,6 +180,7 @@ function Search(props) {
               BookRef={result.refnumber}
               Block={StatBlock}
               BorrowStat={BorrowStatus}
+              BookQty={result.quantity}
             />
           </div>
         ))}
@@ -306,19 +307,35 @@ function Staff() {
                   <form action="/book-request" method="post" className="insert-form"id="book-request-form">
                     <div class="form-group">
                       <label for="Title">Resource Title</label>
-                      <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" />
+                      <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required/>
                     </div>
                     <div class="form-group">
                       <label for="Description">Description</label>
-                      <input type="text" class="form-control" id="description" name="description" placeholder="Enter Resource Description" />
+                      <input type="text" class="form-control" id="description" name="description" placeholder="Enter Resource Description" required/>
                     </div>
                     <div class="form-group">
                       <label for="Author">Author</label>
-                      <input type="text" class="form-control" id="author" name="author" placeholder="Enter Resource Author(s)"/>
+                      <input type="text" class="form-control" id="author" name="author" placeholder="Enter Resource Author(s)" required/>
                     </div>
                     <div class="form-group">
                       <label for="Reference Number">Reference Number</label>
-                      <input type="number" class="form-control" id="refnumber" name="refnumber" placeholder="Enter Resource Reference Number"/>
+                      <input type="number" class="form-control" id="refnumber" name="refnumber" placeholder="Enter Resource Reference Number" required/>
+                    </div>
+                    <div class="form-group">
+                      <label for="Category">Category</label>
+                      <select id="category" name="category" class="form-control" required>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Non-fiction">Non-fiction</option>
+                        <option value="History">History</option>
+                        <option value="Math">Math</option>
+                        <option value="Graphic Novel">Graphic Novel</option>
+                        <option value="Classic">Classic</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="Quantity">Quantity</label>
+                      <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Enter Number of Copies" required/>
                     </div>
                   </form>
                 </div>
@@ -417,6 +434,7 @@ function BorrowBook(props) {
   var BookRef = props.BookRef;
   var BookTitle = props.BookTitle;
   var BorrowStat = props.BorrowStat;
+  var BookQty = props.BookQty;
 
   var modaltarget = "#exampleModalCenterBorrow" + BookRef;
   var modalid = "exampleModalCenterBorrow" + BookRef;
@@ -436,6 +454,8 @@ function BorrowBook(props) {
       <div>
         <button type="button" className="list-group-item list-group-item-action" data-toggle="modal" data-target={modaltarget}>
           {BookTitle}
+          <hr/> 
+          Availability: {BookQty} copies
         </button>
         <div class="modal fade" id={modalid} tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
@@ -590,6 +610,10 @@ function AddBook() {
                   <div class="form-group">
                     <label for="Reference Number">Reference Number</label>
                     <input type="number" class="form-control" id="refnumber" name="refnumber" placeholder="Enter Resource Reference Number"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="Quantity">Number of Copies</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Enter quanitity of copis"/>
                   </div>
                 </form>
               </div>
@@ -763,10 +787,23 @@ function ApproveRequest(props) {
             <div class="modal-body">
               <div>
                 {Resources.map((request) => (
-                  <div key={request._id}>
-                    <button type="button" className="list-group-item list-group-item-action">
+                  <div className="list-group-item list-group-item-action" key={request._id}>
+                    <form className="item" action='/approve' id="approval" method="post">
                       {request.title}
-                    </button>
+                      <div>
+                        <input type="hidden" id="title" name="title" value={request.title} />
+                        <input type="hidden" id="description" name="description" value={request.content} />
+                        <input type="hidden" id="author" name="author" value={request.author} />
+                        <input type="hidden" id="refnumber" name="refnumber" value={request.refnumber} />
+                        <input type="hidden" id="category" name="category" value={request.category} />
+                        <input type="hidden" id="quantity" name="quantity" value={request.quantity} />
+                      </div>
+                      <div>
+                        <button className="btn btn-success" form="approval">
+                          Approve
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 ))}
               </div>

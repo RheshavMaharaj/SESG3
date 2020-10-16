@@ -16,23 +16,11 @@ export default class About extends Component {
             <div class="container">
               <p></p>
               <p></p>
-              <div
-                class="panel-group"
-                id="accordion"
-                role="tablist"
-                aria-multiselectable="true"
-              >
+              <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 <div class="panel panel-default">
                   <div class="panel-heading" role="tab" id="headingOne">
                     <h4 class="panel-title">
-                      <a
-                        role="button"
-                        data-toggle="collapse"
-                        data-parent="#accordion"
-                        href="#collapseOne"
-                        aria-expanded="true"
-                        aria-controls="collapseOne"
-                      >
+                      <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         Can a user download a resources to keep it permanently?
                       </a>
                     </h4>
@@ -115,6 +103,37 @@ export default class About extends Component {
                         Yes, we aim to ease our students’ search of resources.
                         This gives them an opportunity to save time and study
                         content they need to focus on.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="panel panel-default">
+                  <div class="panel-heading" role="tab" id="headingFour">
+                    <h4 class="panel-title">
+                      <a
+                        class="collapsed"
+                        role="button"
+                        data-toggle="collapse"
+                        data-parent="#accordion"
+                        href="#collapseFour"
+                        aria-expanded="false"
+                        aria-controls="collapseFour"
+                      >
+                        Cannot find the eResource you searched for?
+                      </a>
+                    </h4>
+                  </div>
+                  <div
+                    id="collapseFour"
+                    class="panel-collapse collapse"
+                    role="tabpanel"
+                    aria-labelledby="headingFour"
+                  >
+                    <div class="panel-body">
+                      <p>
+                        It is possible that the resource you are trying to search for does not exist in our eLibrary.
+                        Alternatively, it could mean that the resource has already been borrowed by other users and no 
+                        further copies are currently available. You may need to wait until that resource is available again.
                       </p>
                     </div>
                   </div>
