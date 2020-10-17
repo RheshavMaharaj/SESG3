@@ -371,7 +371,7 @@ router.post('/edit', function(req, res, next) {
     if (err) throw err;
     const db = client.db(dbName);
     var myquery = { title: req.body.search };
-    var newvalues = { $set: {title: req.body.title, content: req.body.content , author: req.body.author, refnumber: req.body.refnumber} };
+    var newvalues = { $set: {title: req.body.title, content: req.body.content , author: req.body.author, category: req.body.category} };
     db.collection('Resources').updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
       //console.log("1 document updated");

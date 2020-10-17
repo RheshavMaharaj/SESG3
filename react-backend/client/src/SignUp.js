@@ -38,7 +38,7 @@ function Message(props) {
       <div>
         <br />
         <div class="alert alert-danger text-center m" role="alert">
-          User Already Exists! Please Enter a Different Email.
+          User Already Exists! Please Try Again.
         </div>
       </div>
     )

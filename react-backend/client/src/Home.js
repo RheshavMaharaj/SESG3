@@ -737,12 +737,20 @@ function EditBook() {
                     <input type="text" class="form-control" id="content" name="content" placeholder="Enter new description"/>
                   </div>
                   <div class="form-group">
-                    <label>Search</label>
+                    <label>Author</label>
                     <input type="text" class="form-control" id="author" name="author" placeholder="Enter new Author"/>
                   </div>
                   <div class="form-group">
-                    <label>Reference Number</label>
-                    <input type="text" class="form-control" id="refnumber" name="refnumber" placeholder="Enter a new reference number"/>
+                    <label for="Category">Category</label>
+                    <select id="category" name="category" class="form-control" required>
+                      <option value="Fiction">Fiction</option>
+                      <option value="Non-fiction">Non-fiction</option>
+                      <option value="History">History</option>
+                      <option value="Math">Math</option>
+                      <option value="Graphic Novel">Graphic Novel</option>
+                      <option value="Classic">Classic</option>
+                      <option value="Other">Other</option>
+                    </select>
                   </div>
                 </form>
               </div>
@@ -796,7 +804,7 @@ function ApproveRequest(props) {
                         <input type="hidden" id="author" name="author" value={request.author} />
                         <input type="hidden" id="refnumber" name="refnumber" value={request.refnumber} />
                         <input type="hidden" id="category" name="category" value={request.category} />
-                        <input type="hidden" id="quantity" name="quantity" value={request.quantity} />
+                        <input type="number" id="quantity" name="quantity" value={request.quantity} hidden />
                       </div>
                       <div>
                         <button className="btn btn-success" form="approval">
