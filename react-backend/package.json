@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "concurrently \"node bin/www\" \"cd client && npm start\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install npm && run build"
+    "start": "concurrently \"node bin/www\" \"cd client && npm start\""
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.4.0",
