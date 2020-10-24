@@ -140,16 +140,6 @@ export default class About extends Component {
                 </div>
               </div>
             </div>
-            {/*}
-            <button
-              type="button"
-              class="btn btn-danger"
-              data-toggle="modal"
-              data-target="#exampleModalCenter"
-            >
-              Report New Query
-            </button>
-            */}
           </div>
 
           <div

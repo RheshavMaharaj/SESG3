@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import logo from "./logo.svg";
-import "./Navbar.css";
 import about from "./Assets/help.svg";
 import home from "./Assets/home-run.svg";
 import user from "./Assets/user.svg";
@@ -17,9 +16,8 @@ import Login from "./Login.js";
 import SplashScreen from "./SplashScreen";
 import SignUp from "./SignUp.js";
 import CategoryView from "./CategoryView.js";
-//import SearchResults from './SearchResults.js';
 
-//import notification from "./Assets/notification.svg";
+import "./Navbar.css"; //Importing Styles
 
 class Navbar extends Component {
   state = { status: false, username: "" };
@@ -64,11 +62,6 @@ class Navbar extends Component {
               <Route path="/categoryview">
                 <CategoryView />
               </Route>
-              {/*}
-              <Route path="/search-error">
-                <SearchResults />
-              </Route>
-              */}
               <Route path="/">
                 <SplashScreen />
               </Route>
@@ -80,6 +73,7 @@ class Navbar extends Component {
   }
 }
 
+//get session details and based on session details, render logged in or logged out
 function LoginStatus(props) {
   var LoggedIn = props.LoggedIn;
   if (LoggedIn) {
@@ -138,5 +132,5 @@ function IsLoggedOut(props) {
   );
 }
 
-//get session details and based on session details, render logged in or logged out
+
 export default Navbar;
